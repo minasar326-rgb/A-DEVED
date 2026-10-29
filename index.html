@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>إدارة محل الخياطة</title>
+  <meta name="description" content="تطبيق لإدارة عملاء ومقاسات وطلبات ومدفوعات محل الخياطة" />
+  <meta name="theme-color" content="#168575" />
+  <script>
+    // 1. تصفية ومنع إزعاج أخطاء ورسائل إضافات المتصفح الخارجية (مثل إضافات الـ PDF)
+    window.addEventListener('unhandledrejection', function(e) {
+      const msg = String(e?.reason?.message || e?.reason || "");
+      if (msg.includes('message channel closed') || msg.includes('asynchronous response')) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      }
+    }, true);
+
+    window.addEventListener('error', function(e) {
+      const msg = String(e?.message || "");
+      if (msg.includes('message channel closed') || (e.filename && e.filename.startsWith('chrome-extension://'))) {
+        e.preventDefault();
+        return true;
+      }
+    }, true);
+
+    const _origLog = console.log;
+    console.log = function(...args) {
+      if (typeof args[0] === 'string' && (args[0].includes('[pdf-viewer-detect]') || args[0].includes('isBrowserPdfViewerPage'))) {
+        return;
+      }
+      _origLog.apply(console, args);
+    };
+
+    // 2. تحميل ملف manifest فقط عند التشغيل عبر بروتوكول http/https لمنع خطأ CORS في المتصفح عند فتح الملف مباشرة
+    if (location.protocol === "http:" || location.protocol === "https:") {
+      const manifestLink = document.createElement("link");
+      manifestLink.rel = "manifest";
+      manifestLink.href = "manifest.json";
+      document.head.appendChild(manifestLink);
+    }
+  </script>
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="icon" href="icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- الشريط العلوي -->
+  <header class="topbar">
+    <h1>🧵 محل الخياطة</h1>
+    <button id="notifyBtn" class="btn small ghost">🔔 تفعيل التنبيهات</button>
+  </header>
+
+  <main>
+    <!-- شريط التبويبات العلوي: كل الأقسام ظاهرة هنا -->
+    <nav class="toptabs">
+      <button data-tab="dashboard" class="active">🏠 الرئيسية</button>
+      <button data-tab="customers">👥 العملاء والمقاسات</button>
+      <button data-tab="orders">📋 الطلبات</button>
+      <button data-tab="supplies">📦 البضاعة والمستلزمات</button>
+      <button data-tab="accounts">💰 الحسابات والأرباح</button>
+    </nav>
+
+    <!-- 1) الرئيسية -->
+    <section id="tab-dashboard" class="tab active">
+      <div class="stats" id="stats"></div>
+      <h2>أقرب مواعيد التسليم</h2>
+      <div id="upcoming" class="list"></div>
+      <h2>النسخ الاحتياطي وتقارير الوورد الشهرية</h2>
+      <div class="row">
+        <button class="btn" id="exportWordBtn" style="background:#185a9d; color:#fff;">📄 تنزيل تقرير Word كامل الآن (.docx)</button>
+        <button class="btn ghost" id="openWordFolderBtn">📂 فتح مجلد تقارير الوورد الشهرية</button>
+        <button class="btn ghost" id="exportBtn">⬇️ تصدير نسخة JSON</button>
+        <label class="btn ghost">⬆️ استيراد نسخة
+          <input type="file" id="importFile" accept="application/json" hidden />
+        </label>
+      </div>
+      <div style="font-size:12px; color:var(--muted); margin-top:-10px; margin-bottom:20px; line-height:1.6;">
+        🛡️ <b>تلقائي بالكامل:</b> يتم تنزيل وحفظ نسخة وورد (.docx) شاملة للحسابات والشكك والمقاسات والعملاء أول كل شهر تلقائياً على جهازك وفي المجلد: <code>D:\تقارير_محل_الخياطة_الشهرية</code> بدون الحاجة لأي تدخل منك.
+      </div>
+    </section>
+
+    <!-- 2) العملاء -->
+    <section id="tab-customers" class="tab">
+      <div class="row">
+        <input type="search" id="customerSearch" placeholder="ابحث باسم العميل أو رقم هاتفه..." />
+        <button class="btn" id="addCustomerBtn">+ عميل جديد</button>
+        <button class="btn ghost" id="manageMeasuresBtn">⚙️ تعديل / إضافة أسماء المقاسات</button>
+      </div>
+      <div id="customerList" class="list"></div>
+    </section>
+
+    <!-- 3) الطلبات -->
+    <section id="tab-orders" class="tab">
+      <div class="row">
+        <select id="orderFilter">
+          <option value="all">كل الطلبات</option>
+          <option value="تحت التنفيذ">تحت التنفيذ</option>
+          <option value="جاهز">جاهز</option>
+          <option value="تم التسليم">تم التسليم</option>
+        </select>
+        <button class="btn" id="addOrderBtn">+ طلب جديد</button>
+      </div>
+      <div id="orderList" class="list"></div>
+    </section>
+
+    <!-- 4) البضاعة والمستلزمات (الأقمشة، الخيوط، الزراير) -->
+    <section id="tab-supplies" class="tab">
+      <div class="row">
+        <input type="search" id="supplySearch" placeholder="ابحث في البضاعة والمشتريات (قماش، خيوط، زراير...)" />
+        <select id="supplyCategoryFilter">
+          <option value="all">جميع أنواع البضاعة</option>
+          <option value="أقمشة">أقمشة</option>
+          <option value="خيوط">خيوط</option>
+          <option value="أزرار وإكسسوارات">أزرار وإكسسوارات</option>
+          <option value="بطانات وفازلين">بطانات وفازلين</option>
+          <option value="أدوات ومستلزمات ورشة">أدوات ومستلزمات ورشة</option>
+          <option value="أخرى">أخرى</option>
+        </select>
+        <button class="btn" id="addSupplyBtn">+ شراء بضاعة / خامات جديدة</button>
+      </div>
+      <div class="stats" id="supplyStats" style="margin-bottom:20px;"></div>
+      <h2>سجل فواتير وخامات البضاعة المشتراة</h2>
+      <div id="supplyList" class="list"></div>
+    </section>
+
+    <!-- 5) الحسابات والأرباح -->
+    <section id="tab-accounts" class="tab">
+      <div class="row">
+        <button class="btn" id="addPaymentBtn">+ تسجيل دفعة نقدية</button>
+        <button class="btn ghost" id="explainAccountsBtn" style="border-color:var(--primary); color:var(--primary); font-weight:700;">💡 اضغط هنا لفهم الحسابات ببساطة</button>
+      </div>
+
+      <!-- كارت شرح وتوضيح الحسابات للمحل -->
+      <div id="accountsGuide" class="guide-box" style="display:none; background:var(--card); border:2px solid var(--primary); border-radius:var(--radius); padding:20px; margin-bottom:24px;">
+        <h3 style="color:var(--primary); margin-top:0;">💡 دليل حسابات المحل بلغة بسيطة ومفهومة:</h3>
+        <ul style="padding-inline-start:20px; margin-bottom:0; line-height:2;">
+          <li><b>📥 المحصّل نقداً (الخزينة / الدرج):</b> ده كل قرش دخل جيبك أو درج المحل فعلياً كاش (عربين الطلبات الجديدة + أي دفعات دفعها الزبون كاش).</li>
+          <li><b>📦 مشتريات البضاعة والخامات (المصروفات):</b> كل قرش صرفته من جيبك تشتري بيه أقمشة، خيوط، زراير، سوست، بطانات، أو مستلزمات ورشة.</li>
+          <li><b>💵 صافي ربح المحل الفعلي:</b> بيساوي (المحصّل نقداً من الزباين - مشتريات البضاعة). دي الفلوس الصافية اللي فضلت معاك بعد خصم مصاريف الخامات!</li>
+          <li><b>⏳ المتبقي على الزباين (ديون ليك):</b> فلوس شغلك وتفصيلك اللي لسه عند الزباين ومتبقية عليهم لما يجوا يستلموا طلباتهم.</li>
+        </ul>
+      </div>
+
+      <div class="stats" id="accountsSummary" style="margin-bottom:24px;"></div>
+
+      <h2>العملاء اللي عليهم متبقي (ديون مستحقة لك)</h2>
+      <div id="debtList" class="list"></div>
+    </section>
+  </main>
+
+  <!-- شريط التنقل السفلي -->
+  <nav class="tabbar">
+    <button data-tab="dashboard" class="active">🏠<span>الرئيسية</span></button>
+    <button data-tab="customers">👥<span>العملاء</span></button>
+    <button data-tab="orders">📋<span>الطلبات</span></button>
+    <button data-tab="supplies">📦<span>البضاعة</span></button>
+    <button data-tab="accounts">💰<span>الحسابات</span></button>
+  </nav>
+
+  <!-- نافذة منبثقة عامة تُملأ من app.js -->
+  <dialog id="modal">
+    <form method="dialog" id="modalForm">
+      <h2 id="modalTitle"></h2>
+      <div id="modalBody"></div>
+      <div class="row end">
+        <button type="button" class="btn ghost" id="modalCancel">إلغاء</button>
+        <button type="submit" class="btn" id="modalSave">حفظ</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast"></div>
+  <!-- مكتبات الفايربيز والمزامنة اللحظية الفورية بين جميع الأجهزة -->
+  <script src="firebase-app.js"></script>
+  <script src="firebase-firestore.js"></script>
+  <script src="firebase-analytics.js"></script>
+  <script src="firebase-sync.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

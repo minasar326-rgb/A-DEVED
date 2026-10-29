@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // =========================================================================
+    // قواعد حماية قصوى لبيانات محل الخياطة على Firebase Firestore
+    // - منع تدمير أو مسح البيانات
+    // - التحقق الصارم من بنية الحقول المطلوبة
+    // - حظر أي مجموعات أو مسارات مجهولة
+    // =========================================================================
+
+    match /tailor_shop/{docId} {
+      // السماح بالقراءة لأجهزة المحل
+      allow read: if true;
+
+      // السماح بالكتابة فقط إذا كانت البيانات مطابقة للشروط الأمنية الصارمة
+      allow create, update: if 
+        // 1. التأكد من وجود الحقول الأساسية
+        request.resource.data.keys().hasAll(['customers', 'orders', 'payments', 'supplies', 'measureTypes'])
+        // 2. التحقق من أنواع الحقول أنها قوائم سليمة
+        && request.resource.data.customers is list
+        && request.resource.data.orders is list
+        && request.resource.data.payments is list
+        && request.resource.data.supplies is list
+        && request.resource.data.measureTypes is list
+        // 3. منع الإدخالات المشبوهة أو الضخمة جداً (أقل من 2 ميجابايت)
+        && request.resource.data.size() < 2000000;
+
+      // منع الحذف المباشر للوثيقة بالكامل لمنع أي مسح غير مقصود
+      allow delete: if false;
+    }
+
+    // إغلاق أي مسار خارجي آخر غير مسموح به
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

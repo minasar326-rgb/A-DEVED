@@ -1,0 +1,20 @@
+{
+  "name": "tailor-pwa",
+  "version": "2.0.0",
+  "description": "نظام إدارة محل الخياطة - تطبيق ويب تقدمي متكامل ومحمي",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "pwa",
+    "tailor",
+    "management",
+    "accounting"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "docx": "^9.15.0"
+  }
+}
