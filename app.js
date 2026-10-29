@@ -109,9 +109,14 @@ function updateSyncStatusUI() {
   }
 }
 
-// مزامنة البيانات مع السيرفر المحلي
+// التحقق من توفر السيرفر المحلي (تجنب أخطاء 405 و 404 عند تشغيل الموقع أونلاين على GitHub Pages)
+function isLocalServerAvailable() {
+  return location.protocol !== "file:" && !location.hostname.includes("github.io");
+}
+
+// مزامنة البيانات مع السيرفر المحلي والقرص الصلب
 async function syncWithServer() {
-  if (location.protocol === "file:") return;
+  if (!isLocalServerAvailable()) return;
   try {
     const res = await fetch("/api/save", {
       method: "POST",
@@ -144,34 +149,39 @@ async function initServerSync() {
     return;
   }
 
-  try {
-    const res = await fetch("/api/data");
-    if (res.ok) {
-      const json = await res.json();
-      if (json && json.data) {
-        const serverDb = json.data;
-        const localDb = db;
-        const serverHasData = (serverDb.customers && serverDb.customers.length > 0) || (serverDb.orders && serverDb.orders.length > 0);
-        const localHasData = (localDb.customers && localDb.customers.length > 0) || (localDb.orders && localDb.orders.length > 0);
+  if (isLocalServerAvailable()) {
+    try {
+      const res = await fetch("/api/data");
+      if (res.ok) {
+        const json = await res.json();
+        if (json && json.data) {
+          const serverDb = json.data;
+          const localDb = db;
+          const serverHasData = (serverDb.customers && serverDb.customers.length > 0) || (serverDb.orders && serverDb.orders.length > 0);
+          const localHasData = (localDb.customers && localDb.customers.length > 0) || (localDb.orders && localDb.orders.length > 0);
 
-        if (serverHasData) {
-          // السيرفر يحتوي على بيانات -> نعتمدها كأساس موثوق
-          db = serverDb;
-          if (!Array.isArray(db.supplies)) db.supplies = [];
-          if (!Array.isArray(db.measureTypes) || db.measureTypes.length === 0) {
-            db.measureTypes = [...DEFAULT_MEASURES];
+          if (serverHasData) {
+            // السيرفر يحتوي على بيانات -> نعتمدها كأساس موثوق
+            db = serverDb;
+            if (!Array.isArray(db.supplies)) db.supplies = [];
+            if (!Array.isArray(db.measureTypes) || db.measureTypes.length === 0) {
+              db.measureTypes = [...DEFAULT_MEASURES];
+            }
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+          } else if (localHasData && !serverHasData) {
+            // السيرفر فارغ والواجهة بها بيانات سابقة -> نرفعها فوراً للسيرفر للحفظ على القرص
+            syncWithServer();
           }
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
-        } else if (localHasData && !serverHasData) {
-          // السيرفر فارغ والواجهة بها بيانات سابقة -> نرفعها فوراً للسيرفر للحفظ على القرص
-          syncWithServer();
+          isServerOnline = true;
         }
-        isServerOnline = true;
       }
+    } catch {
+      isServerOnline = false;
     }
-  } catch {
+  } else {
     isServerOnline = false;
   }
+
   updateSyncStatusUI();
   render();
 
@@ -187,7 +197,7 @@ async function initServerSync() {
           db.measureTypes = [...DEFAULT_MEASURES];
         }
         localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
-        syncWithServer(); // حفظ نسخة تلقائية على القرص الصلب فوراً
+        syncWithServer(); // حفظ نسخة تلقائية على القرص الصلب فوراً إن وجد سيرفر محلي
         syncReminders();
         render();
         toast("⚡ تم استلام تحديث لحظي جديد من جهاز آخر بنجاح!");
@@ -1199,27 +1209,33 @@ document.addEventListener("click", (e) => {
 /* ---------- النسخ الاحتياطي وحماية الأموال وتقارير الوورد ---------- */
 const exportWordBtn = $("#exportWordBtn");
 if (exportWordBtn) {
-  exportWordBtn.onclick = () => {
-    if (location.protocol === "file:") {
-      toast("تنزيل تقرير Word يتطلب تشغيل البرنامج عبر تشغيل_البرنامج.bat");
-      return;
-    }
+  exportWordBtn.onclick = async () => {
     toast("جاري تجهيز تقرير Word الشامل لجميع الحسابات... ⏳");
-    window.location.href = "/api/export-word";
-    setTimeout(() => {
-      toast("تم تجهيز وبدء تنزيل ملف الوورد (.docx) بنجاح 📄✅");
-    }, 1200);
+    try {
+      if (typeof window.generateAndDownloadClientWordReport === "function") {
+        await window.generateAndDownloadClientWordReport(db);
+        toast("تم تنزيل ملف الوورد (.docx) بنجاح 📄✅");
+      } else if (isLocalServerAvailable()) {
+        window.location.href = "/api/export-word";
+        toast("تم بدء تنزيل ملف الوورد (.docx) بنجاح 📄✅");
+      } else {
+        toast("جاري تهيئة مولد التقارير، يرجى المحاولة بعد لحظات");
+      }
+    } catch (err) {
+      console.warn("[Word Export]", err);
+      toast("تعذر تجهيز ملف الوورد ❌");
+    }
   };
 }
 
 const openWordFolderBtn = $("#openWordFolderBtn");
 if (openWordFolderBtn) {
   openWordFolderBtn.onclick = async () => {
+    if (!isLocalServerAvailable()) {
+      toast("📂 مجلد التقارير محفوظ محلياً على كمبيوتر المحل في: D:\\تقارير_محل_الخياطة_الشهرية");
+      return;
+    }
     try {
-      if (location.protocol === "file:") {
-        toast("المجلد محفوظ على جهازك في المسار: D:\\تقارير_محل_الخياطة_الشهرية");
-        return;
-      }
       const res = await fetch("/api/open-reports-folder");
       if (res.ok) {
         toast("تم فتح مجلد تقارير الوورد الشهرية في جهازك 📂✅");
@@ -1432,16 +1448,25 @@ function checkAndAutoDownloadMonthlyWordReport() {
   try {
     const lastDownloaded = localStorage.getItem(storageKey);
     if (lastDownloaded !== monthKey) {
-      // انتظر ثانيتين بعد تحميل الصفحة لتنزيل التقرير الشهري تلقائياً بدون إزعاج
-      setTimeout(() => {
-        const a = document.createElement("a");
-        a.href = "/api/export-word";
-        a.download = `تقرير_محل_الخياطة_شهر_${now.getMonth() + 1}_${now.getFullYear()}.docx`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        localStorage.setItem(storageKey, monthKey);
-        toast(`📄 تم تنزيل نسخة تقرير Word الشهري (${now.getMonth() + 1}/${now.getFullYear()}) تلقائياً على جهازك بنجاح! 🎉`);
+      setTimeout(async () => {
+        try {
+          if (typeof window.generateAndDownloadClientWordReport === "function") {
+            await window.generateAndDownloadClientWordReport(db);
+            localStorage.setItem(storageKey, monthKey);
+            toast(`📄 تم تنزيل نسخة تقرير Word الشهري (${now.getMonth() + 1}/${now.getFullYear()}) تلقائياً على جهازك! 🎉`);
+          } else if (isLocalServerAvailable()) {
+            const a = document.createElement("a");
+            a.href = "/api/export-word";
+            a.download = `تقرير_محل_الخياطة_شهر_${now.getMonth() + 1}_${now.getFullYear()}.docx`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            localStorage.setItem(storageKey, monthKey);
+            toast(`📄 تم تنزيل نسخة تقرير Word الشهري (${now.getMonth() + 1}/${now.getFullYear()}) تلقائياً على جهازك! 🎉`);
+          }
+        } catch (err) {
+          console.warn("[Auto Word Download]", err);
+        }
       }, 2500);
     }
   } catch (err) {

@@ -59,14 +59,10 @@
 
       firestoreDb = firebase.firestore();
 
-      // تفعيل التخزين الأوفلاين في المتصفح ليعمل بدون إنترنت بسلاسة
-      firestoreDb.enablePersistence({ synchronizeTabs: true }).catch((err) => {
-        if (err.code === "failed-precondition") {
-          console.info("[Firebase Persistence] التخزين المؤقت مفعل في نافذة أخرى.");
-        } else if (err.code === "unimplemented") {
-          console.warn("[Firebase Persistence] المتصفح الحالي لا يدعم التخزين المتقدم للفايربيز.");
-        }
-      });
+      // تفعيل التخزين الأوفلاين في المتصفح ليعمل بدون إنترنت بسلاسة وبدون تحذيرات
+      try {
+        firestoreDb.enablePersistence({ synchronizeTabs: true }).catch(() => {});
+      } catch {}
 
       docRef = firestoreDb.collection("tailor_shop").doc("database");
       isFirebaseReady = true;

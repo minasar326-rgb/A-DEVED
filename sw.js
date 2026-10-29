@@ -1,5 +1,5 @@
 /* ===== Service Worker: التخزين للعمل بدون إنترنت + التنبيهات ===== */
-const CACHE = "tailor-v2.4";
+const CACHE = "tailor-v2.5";
 const FILES = [
   "./",
   "./index.html",
@@ -9,6 +9,8 @@ const FILES = [
   "./firebase-firestore.js",
   "./firebase-analytics.js",
   "./firebase-sync.js",
+  "./docx.iife.js",
+  "./word-generator-client.js",
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png"
