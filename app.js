@@ -444,19 +444,39 @@ document.addEventListener("click", (e) => {
   if (target) $("#" + target)?.click();
 });
 
-/* ---------- النافذة المنبثقة العامة ---------- */
+/* ---------- النافذة المنبثقة العامة مع حماية منع تكرار الحفظ ---------- */
 let onSave = null;
+let isSubmitting = false;
 function openModal(title, html, saveFn) {
   $("#modalTitle").textContent = title;
   $("#modalBody").innerHTML = html;
   onSave = saveFn;
+  isSubmitting = false;
+  const submitBtn = $("#modalSave");
+  if (submitBtn) submitBtn.disabled = false;
   $("#modal").showModal();
 }
-$("#modalCancel").onclick = () => $("#modal").close();
+$("#modalCancel").onclick = () => {
+  isSubmitting = false;
+  $("#modal").close();
+};
 $("#modalForm").addEventListener("submit", (e) => {
   e.preventDefault();
-  const data = Object.fromEntries(new FormData(e.target));
-  if (onSave && onSave(data) !== false) $("#modal").close();
+  if (isSubmitting) return;
+  const submitBtn = $("#modalSave");
+  try {
+    isSubmitting = true;
+    if (submitBtn) submitBtn.disabled = true;
+    const data = Object.fromEntries(new FormData(e.target));
+    if (onSave && onSave(data) !== false) {
+      $("#modal").close();
+    }
+  } finally {
+    setTimeout(() => {
+      isSubmitting = false;
+      if (submitBtn) submitBtn.disabled = false;
+    }, 400);
+  }
 });
 
 const field = (label, name, value = "", type = "text", extra = "") =>
@@ -627,9 +647,19 @@ function customerForm(c = {}) {
           db.measureTypes.push(customName);
         }
       }
+      const nameVal = (d.name || "").trim();
+      const phoneVal = (d.phone || "").trim();
+      if (!nameVal) {
+        toast("يرجى إدخال اسم العميل ⚠️");
+        return false;
+      }
+      if (!phoneVal) {
+        toast("يرجى إدخال رقم الهاتف ⚠️");
+        return false;
+      }
       const data = {
-        name: d.name.trim(),
-        phone: d.phone.trim(),
+        name: nameVal,
+        phone: phoneVal,
         address: (d.address || "").trim(),
         notes: (d.notes || "").trim(),
         measurements
@@ -759,8 +789,24 @@ function orderForm(o = {}, presetCustomer) {
     (d) => {
       const priceVal = num(d.price);
       const depositVal = num(d.deposit);
+      if (!d.customerId) {
+        toast("يرجى اختيار العميل ⚠️");
+        return false;
+      }
+      if (!d.dueDate) {
+        toast("يرجى تحديد موعد التسليم ⚠️");
+        return false;
+      }
       if (priceVal <= 0) {
-        toast("يرجى إدخال سعر صحيح للطلب ⚠️");
+        toast("يرجى إدخال سعر صحيح أكبر من الصفر للطلب ⚠️");
+        return false;
+      }
+      if (depositVal < 0) {
+        toast("لا يمكن أن يكون العربون سالباً ⚠️");
+        return false;
+      }
+      if (depositVal > priceVal) {
+        toast("العربون لا يمكن أن يتجاوز السعر الإجمالي للطلب ⚠️");
         return false;
       }
       const data = {
@@ -818,6 +864,7 @@ const SUPPLY_CATEGORIES = [
   "أزرار وإكسسوارات",
   "بطانات وفازلين",
   "أدوات ومستلزمات ورشة",
+  "مصاريف ونثريات عامة",
   "أخرى"
 ];
 
@@ -849,15 +896,23 @@ function supplyForm(s = {}) {
       field("تاريخ الشراء", "date", s.date || today(), "date", "required") +
       `<label class="field"><span>ملاحظات وتفاصيل الخامة</span><textarea name="notes" placeholder="اكتب تفاصيل الخامة: اللون، العرض، الجودة...">${esc(s.notes)}</textarea></label>`,
     (d) => {
-      const nameVal = d.name.trim();
+      const nameVal = (d.name || "").trim();
       const qtyVal = num(d.quantity) || 1;
       const unitPriceVal = num(d.unitPrice);
       let totalVal = num(d.totalPrice);
+      if (!nameVal) {
+        toast("يرجى إدخال اسم البضاعة أو نوع القماش ⚠️");
+        return false;
+      }
+      if (qtyVal <= 0) {
+        toast("يرجى إدخال كمية صحيحة أكبر من الصفر ⚠️");
+        return false;
+      }
       if (totalVal <= 0 && unitPriceVal > 0) {
         totalVal = qtyVal * unitPriceVal;
       }
       if (totalVal <= 0) {
-        toast("يرجى إدخال سعر صحيح للبضاعة ⚠️");
+        toast("يرجى إدخال سعر صحيح للبضاعة أكبر من الصفر ⚠️");
         return false;
       }
 
@@ -986,32 +1041,41 @@ function renderSupplies() {
 /* =================== الحسابات والمالية والشروحات المبسطة =================== */
 function paymentForm(preset = {}, presetCustomerId) {
   if (!needCustomers()) return;
+  const isEditing = !!preset.id;
   const customerId = preset.customerId || presetCustomerId;
   const customer = customerId ? db.customers.find((c) => c.id === customerId) : null;
   const account = customerId ? accountFor(customerId) : null;
   const hint = account && account.remaining > 0 ? ` (المتبقي عليه: ${money(account.remaining)})` : "";
 
   openModal(
-    "تسجيل دفعة نقدية جديدة" + (customer ? ` - ${customer.name}` : ""),
+    (isEditing ? "تعديل دفعة نقدية مسجلة" : "تسجيل دفعة نقدية جديدة") + (customer ? ` - ${customer.name}` : ""),
     selectField("العميل", "customerId", customerOptions(), customerId) +
       field("المبلغ المستلم نقداً (ج.م)" + hint, "amount", preset.amount || (account && account.remaining > 0 ? account.remaining : ""), "text", 'inputmode="decimal" required autofocus') +
       field("تاريخ استلام المبلغ", "date", preset.date || today(), "date", "required") +
       field("ملاحظة أو بيان الدفعة", "note", preset.note || "دفعة تحت الحساب"),
     (d) => {
       const amountVal = num(d.amount);
-      if (amountVal <= 0) {
-        toast("يرجى إدخال مبلغ دفع صحيح ⚠️");
+      if (!d.customerId) {
+        toast("يرجى اختيار العميل ⚠️");
         return false;
       }
-      db.payments.push({
-        id: uid(),
+      if (amountVal <= 0) {
+        toast("يرجى إدخال مبلغ دفع صحيح أكبر من الصفر ⚠️");
+        return false;
+      }
+      const data = {
         customerId: d.customerId,
         amount: amountVal,
-        date: d.date,
+        date: d.date || today(),
         note: (d.note || "").trim()
-      });
+      };
+      if (isEditing) {
+        Object.assign(preset, data);
+      } else {
+        db.payments.push({ id: uid(), ...data });
+      }
       save();
-      toast("تم تسجيل الدفعة النقدية بنجاح في الخزينة ✅");
+      toast(isEditing ? "تم تعديل الدفعة النقدية بنجاح ✅" : "تم تسجيل الدفعة النقدية بنجاح في الخزينة ✅");
     }
   );
 }
@@ -1111,6 +1175,34 @@ function renderAccounts() {
           .join("")
       : emptyState("check", "لا توجد أي مبالغ متبقية على العملاء (الحسابات مسددة بالكامل والحمد لله)");
   }
+
+  // قائمة سجل الدفعات النقدية المستلمة في الخزينة
+  const paymentListEl = $("#paymentList");
+  if (paymentListEl) {
+    const sortedPayments = [...(db.payments || [])].sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+    paymentListEl.innerHTML = sortedPayments.length
+      ? sortedPayments
+          .map(
+            (p) => `
+            <div class="card">
+              <div class="head">
+                <div class="title" style="font-size:16px;">💵 <b>${esc(customerName(p.customerId))}</b></div>
+                <span class="badge ok" style="font-size:14px; font-weight:700;">+ ${money(p.amount)}</span>
+              </div>
+              <div class="meta" style="margin-top:6px; font-size:13px;">
+                📅 تاريخ الاستلام: <b>${esc(p.date)}</b>
+                ${p.note ? ` · 📝 بيان: ${esc(p.note)}` : ""}
+              </div>
+              <div class="actions">
+                <button class="btn small ghost" data-edit-payment="${p.id}">✏️ تعديل الدفعة</button>
+                <button class="btn small danger" data-del-payment="${p.id}">حذف</button>
+              </div>
+            </div>
+          `
+          )
+          .join("")
+      : emptyState("wallet", "لم يتم تسجيل أي دفعات نقدية بعد", "payment", "تسجيل أول دفعة نقدية");
+  }
 }
 
 /* =================== لوحة التحكم الرئيسية =================== */
@@ -1163,6 +1255,16 @@ document.addEventListener("click", (e) => {
   if (d.editCustomer) customerForm(find("customers", d.editCustomer));
   if (d.orderFor) orderForm({}, d.orderFor);
   if (d.paymentFor) paymentForm({}, d.paymentFor);
+
+  if (d.editPayment) paymentForm(find("payments", d.editPayment));
+  if (d.delPayment) {
+    const p = find("payments", d.delPayment);
+    if (confirm(`هل أنت متأكد من حذف هذه الدفعة النقدية بمبلغ "${p ? money(p.amount) : ""}"؟`)) {
+      db.payments = db.payments.filter((x) => x.id !== d.delPayment);
+      save();
+      toast("تم حذف الدفعة النقدية وتحديث الحسابات ✅");
+    }
+  }
 
   if (d.editSupply) supplyForm(find("supplies", d.editSupply));
   if (d.delSupply) {

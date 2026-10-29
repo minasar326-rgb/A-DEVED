@@ -123,6 +123,15 @@ dialog h2 { margin: 0 0 22px; padding-bottom: 15px; border-bottom: 1px solid var
   dialog { padding: 20px; } .grid2 { gap: 0 10px; }
 }
 
+@media (max-width: 520px) {
+  .grid2 { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: 1fr; }
+  .card .actions { flex-wrap: wrap; }
+  .card .actions .btn { flex: 1 1 100%; }
+  .backup-area .row { flex-direction: column; }
+  .backup-area .btn { width: 100%; }
+}
+
 /* تنبيه التشغيل المباشر عبر الملف ومؤشرات السيرفر */
 .protocol-alert { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; border-radius: var(--radius); padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px; line-height: 1.6; }
 .protocol-alert strong { display: block; font-size: 14px; margin-bottom: 3px; color: #533f03; }
