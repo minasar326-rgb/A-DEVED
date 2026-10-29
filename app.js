@@ -1286,8 +1286,8 @@ $("#importFile").onchange = async (e) => {
 
 // استعراض واستعادة النسخ الاحتياطية المحفوظة تلقائياً على القرص
 async function openServerBackupsModal() {
-  if (location.protocol === "file:") {
-    toast("هذه الميزة تعمل عند تشغيل السيرفر المحلي عبر تشغيل_البرنامج.bat");
+  if (!isLocalServerAvailable()) {
+    toast("النسخ الاحتياطية على القرص الصلب متاحة على كمبيوتر المحل (الفايربيز يحفظ بياناتك سحابياً 🛡️)");
     return;
   }
   try {
