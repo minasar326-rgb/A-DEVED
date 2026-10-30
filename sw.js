@@ -1,5 +1,5 @@
 /* ===== Service Worker: التخزين للعمل بدون إنترنت + التنبيهات ===== */
-const CACHE = "tailor-v2.7";
+const CACHE = "tailor-v2.8";
 const FILES = [
   "./",
   "./index.html",
