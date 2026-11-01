@@ -1492,7 +1492,7 @@ async function registerSW() {
   if (window.top !== window.self) return null;
 
   try {
-    const reg = await navigator.serviceWorker.register("sw.js?v=3.7", { updateViaCache: "none" });
+    const reg = await navigator.serviceWorker.register("sw.js?v=3.8", { updateViaCache: "none" });
     if (reg.waiting) activatePwaUpdate(reg.waiting);
 
     reg.addEventListener("updatefound", () => {
@@ -1514,7 +1514,6 @@ async function registerSW() {
     });
 
     if (reg.update) reg.update().catch(() => {});
-    setInterval(() => reg.update().catch(() => {}), 5 * 60 * 1000);
     document.addEventListener("visibilitychange", () => {
       if (!document.hidden) reg.update().catch(() => {});
     });
