@@ -52,16 +52,18 @@
     try {
       if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
-        try {
-          if (firebase.analytics) firebase.analytics();
-        } catch {}
+        // لا نفعّل Firebase Analytics؛ التطبيق لا يستخدمه ويرسل نبضات غير لازمة.
       }
 
       firestoreDb = firebase.firestore();
 
-      // تفعيل التخزين الأوفلاين في المتصفح ليعمل بدون إنترنت بسلاسة وبدون تحذيرات
+      // تخزين Firestore المحلي؛ نتعامل مع تعدد التبويبات دون تهيئة إضافية متعارضة
       try {
-        firestoreDb.enablePersistence({ synchronizeTabs: true }).catch(() => {});
+        firestoreDb.enablePersistence({ synchronizeTabs: true }).catch((error) => {
+          if (error?.code !== "failed-precondition" && error?.code !== "unimplemented") {
+            console.debug("[Firebase Sync] التخزين المحلي غير متاح مؤقتاً:", error?.message || error);
+          }
+        });
       } catch {}
 
       docRef = firestoreDb.collection("tailor_shop").doc("database");
