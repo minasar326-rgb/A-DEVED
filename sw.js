@@ -1,5 +1,5 @@
 /* ===== Service Worker: التخزين للعمل بدون إنترنت + التنبيهات ===== */
-const CACHE = "tailor-v3.4";
+const CACHE = "tailor-v3.5";
 const FILES = [
   "./",
   "./index.html",
@@ -11,6 +11,8 @@ const FILES = [
   "./docx.iife.js",
   "./word-generator-client.js",
   "./manifest.json",
+  "./icon-192-v3.5.png",
+  "./icon-512-v3.5.png",
   "./icon-192.png",
   "./icon-512.png"
 ];
@@ -57,6 +59,24 @@ self.addEventListener("fetch", (e) => {
     return;
   }
 
+  const requestUrl = new URL(e.request.url);
+  const isNavigation = e.request.mode === "navigate";
+  const isCoreAsset = ["index.html", "style.css", "app.js", "manifest.json"].some((name) => requestUrl.pathname.endsWith(name));
+
+  if (isNavigation || isCoreAsset) {
+    e.respondWith(
+      fetch(e.request, { cache: "no-store" })
+        .then((res) => {
+          if (res && res.status === 200) {
+            caches.open(CACHE).then((c) => c.put(e.request, res.clone()).catch(() => {})).catch(() => {});
+          }
+          return res;
+        })
+        .catch(() => caches.match(e.request).then((match) => match || caches.match("./index.html")))
+    );
+    return;
+  }
+
   e.respondWith(
     fetch(e.request)
       .then((res) => {
@@ -86,8 +106,8 @@ async function checkReminders() {
       if (o.dueDate <= tomorrow && !notified.has(o.id)) {
         await self.registration.showNotification("موعد تسليم خياطة ⏰", {
           body: `${o.type} - ${o.name} (تاريخ التسليم: ${o.dueDate})`,
-          icon: "icon-192.png",
-          badge: "icon-192.png",
+          icon: "icon-192-v3.5.png",
+          badge: "icon-192-v3.5.png",
           tag: "order-" + o.id,
           dir: "rtl",
           lang: "ar"

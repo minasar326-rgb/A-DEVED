@@ -1465,6 +1465,7 @@ async function openServerBackupsModal() {
 let waitingPwaWorker = null;
 
 function showPwaUpdatePrompt(worker) {
+  if (localStorage.getItem("tailor_pwa_updated_v3.5") === "1") return;
   waitingPwaWorker = worker;
   const dialog = $("#updateDialog");
   if (dialog && typeof dialog.showModal === "function") {
@@ -1473,6 +1474,12 @@ function showPwaUpdatePrompt(worker) {
 }
 
 async function registerSW() {
+  if (navigator.storage?.persist) {
+    navigator.storage.persist().then((persisted) => {
+      sessionStorage.setItem("tailor_storage_persisted", persisted ? "1" : "0");
+    }).catch(() => {});
+  }
+
   if (!("serviceWorker" in navigator)) return null;
 
   // الحماية من الخطأ الشائع: لا يمكن تسجيل Service Worker على بروتوكول file://
@@ -1485,7 +1492,7 @@ async function registerSW() {
   if (window.top !== window.self) return null;
 
   try {
-    const reg = await navigator.serviceWorker.register("sw.js?v=3.4", { updateViaCache: "none" });
+    const reg = await navigator.serviceWorker.register("sw.js?v=3.5", { updateViaCache: "none" });
     if (reg.waiting) showPwaUpdatePrompt(reg.waiting);
 
     reg.addEventListener("updatefound", () => {
@@ -1520,6 +1527,8 @@ async function registerSW() {
 }
 
 $("#updateNowBtn")?.addEventListener("click", () => {
+  localStorage.setItem("tailor_pwa_updated_v3.5", "1");
+  $("#updateDialog")?.close?.();
   if (!waitingPwaWorker) {
     $("#updateDialog")?.close?.();
     location.reload();
