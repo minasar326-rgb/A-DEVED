@@ -1461,7 +1461,17 @@ async function openServerBackupsModal() {
   }
 }
 
-/* ---------- Service Worker والتنبيهات (مع الحماية من أخطاء البروتوكول) ---------- */
+/* ---------- Service Worker والتنبيهات والتحديثات الإلزامية ---------- */
+let waitingPwaWorker = null;
+
+function showPwaUpdatePrompt(worker) {
+  waitingPwaWorker = worker;
+  const dialog = $("#updateDialog");
+  if (dialog && typeof dialog.showModal === "function") {
+    if (!dialog.open) dialog.showModal();
+  }
+}
+
 async function registerSW() {
   if (!("serviceWorker" in navigator)) return null;
 
@@ -1475,7 +1485,27 @@ async function registerSW() {
   if (window.top !== window.self) return null;
 
   try {
-    const reg = await navigator.serviceWorker.register("sw.js");
+    const reg = await navigator.serviceWorker.register("sw.js?v=3.4", { updateViaCache: "none" });
+    if (reg.waiting) showPwaUpdatePrompt(reg.waiting);
+
+    reg.addEventListener("updatefound", () => {
+      const worker = reg.installing;
+      if (!worker) return;
+      worker.addEventListener("statechange", () => {
+        if (worker.state === "installed" && navigator.serviceWorker.controller) {
+          showPwaUpdatePrompt(worker);
+        }
+      });
+    });
+
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (refreshing) return;
+      refreshing = true;
+      sessionStorage.setItem("tailor_pwa_reloading", "1");
+      location.reload();
+    });
+
     if (reg.update) reg.update().catch(() => {});
     try {
       if ("periodicSync" in reg) {
@@ -1488,6 +1518,15 @@ async function registerSW() {
     return null;
   }
 }
+
+$("#updateNowBtn")?.addEventListener("click", () => {
+  if (!waitingPwaWorker) {
+    $("#updateDialog")?.close?.();
+    location.reload();
+    return;
+  }
+  waitingPwaWorker.postMessage("SKIP_WAITING");
+});
 
 // مزامنة المواعيد مع الكاش ليتعامل معها Service Worker للتنبيهات
 async function syncReminders() {

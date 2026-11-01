@@ -1,5 +1,5 @@
 /* ===== Service Worker: التخزين للعمل بدون إنترنت + التنبيهات ===== */
-const CACHE = "tailor-v3.3";
+const CACHE = "tailor-v3.4";
 const FILES = [
   "./",
   "./index.html",
@@ -29,7 +29,6 @@ self.addEventListener("install", (e) => {
       }
     })
   );
-  self.skipWaiting();
 });
 
 // التفعيل: حذف النسخ القديمة واستلام التحكم فوراً
@@ -107,6 +106,9 @@ async function checkReminders() {
 self.addEventListener("message", (e) => {
   if (e.data === "check-reminders") {
     e.waitUntil(checkReminders());
+  }
+  if (e.data === "SKIP_WAITING") {
+    self.skipWaiting();
   }
 });
 
