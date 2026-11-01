@@ -36,13 +36,13 @@
     if (location.protocol === "http:" || location.protocol === "https:") {
       const manifestLink = document.createElement("link");
       manifestLink.rel = "manifest";
-      manifestLink.href = "manifest.json?v=3.5";
+      manifestLink.href = "manifest.json?v=3.6";
       document.head.appendChild(manifestLink);
     }
   </script>
-  <link rel="apple-touch-icon" sizes="192x192" href="icon-192-v3.5.png" />
-  <link rel="icon" type="image/png" sizes="192x192" href="icon-192-v3.5.png" />
-  <link rel="stylesheet" href="style.css?v=3.5" />
+  <link rel="apple-touch-icon" sizes="180x180" href="icon-180-v3.6.png?v=3.6" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192-v3.6.png?v=3.6" />
+  <link rel="stylesheet" href="style.css?v=3.6" />
 </head>
 <body>
   <!-- الشريط العلوي -->
@@ -174,20 +174,21 @@
   </dialog>
 
   <dialog id="updateDialog" class="update-dialog">
-    <div class="update-icon"><img src="icon-192-v3.5.png" alt="أيقونة المعلم للخياطة" /></div>
+    <div class="update-icon"><img src="icon-192-v3.6.png?v=3.6" alt="أيقونة المعلم للخياطة" /></div>
     <h2>تحديث جديد متاح ✨</h2>
-    <p>تحديث المعلم للخياطة للحصول على الشكل والأيقونة الجديدة والتحسينات الأخيرة.</p>
+    <p>سيتم تحديث الموقع وتحسينات الأيقونة. لتحديث أيقونة الشاشة الرئيسية، احذف الاختصار القديم وأضف التطبيق مرة أخرى من قائمة المتصفح.</p>
     <button type="button" class="btn update-now" id="updateNowBtn">تحديث التطبيق الآن</button>
+    <button type="button" class="btn ghost install-icon-button" id="installIconBtn" hidden>إضافة الأيقونة الجديدة</button>
   </dialog>
 
   <div id="toast" class="toast"></div>
   <!-- مكتبات الفايربيز والمزامنة اللحظية الفورية بين جميع الأجهزة -->
   <script src="firebase-app.js?v=2.7"></script>
   <script src="firebase-firestore.js?v=2.7"></script>
-  <script src="firebase-sync.js?v=3.5"></script>
+  <script src="firebase-sync.js?v=3.6"></script>
   <!-- مكتبة توليد تقارير الوورد مباشرة في المتصفح لأي جهاز وموبايل -->
   <script src="docx.iife.js?v=2.7"></script>
   <script src="word-generator-client.js?v=2.7"></script>
-  <script src="app.js?v=3.5"></script>
+  <script src="app.js?v=3.6"></script>
 </body>
 </html>

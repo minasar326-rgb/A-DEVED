@@ -1465,7 +1465,7 @@ async function openServerBackupsModal() {
 let waitingPwaWorker = null;
 
 function showPwaUpdatePrompt(worker) {
-  if (localStorage.getItem("tailor_pwa_updated_v3.5") === "1") return;
+  if (localStorage.getItem("tailor_pwa_updated_v3.6") === "1") return;
   waitingPwaWorker = worker;
   const dialog = $("#updateDialog");
   if (dialog && typeof dialog.showModal === "function") {
@@ -1492,7 +1492,7 @@ async function registerSW() {
   if (window.top !== window.self) return null;
 
   try {
-    const reg = await navigator.serviceWorker.register("sw.js?v=3.5", { updateViaCache: "none" });
+    const reg = await navigator.serviceWorker.register("sw.js?v=3.6", { updateViaCache: "none" });
     if (reg.waiting) showPwaUpdatePrompt(reg.waiting);
 
     reg.addEventListener("updatefound", () => {
@@ -1526,8 +1526,26 @@ async function registerSW() {
   }
 }
 
+let deferredPwaInstallPrompt = null;
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredPwaInstallPrompt = event;
+  const button = $("#installIconBtn");
+  if (button && !matchMedia("(display-mode: standalone)").matches) button.hidden = false;
+});
+
+$("#installIconBtn")?.addEventListener("click", async () => {
+  if (!deferredPwaInstallPrompt) {
+    toast("من قائمة المتصفح اختر: إضافة إلى الشاشة الرئيسية");
+    return;
+  }
+  deferredPwaInstallPrompt.prompt();
+  await deferredPwaInstallPrompt.userChoice.catch(() => null);
+  deferredPwaInstallPrompt = null;
+});
+
 $("#updateNowBtn")?.addEventListener("click", () => {
-  localStorage.setItem("tailor_pwa_updated_v3.5", "1");
+  localStorage.setItem("tailor_pwa_updated_v3.6", "1");
   $("#updateDialog")?.close?.();
   if (!waitingPwaWorker) {
     $("#updateDialog")?.close?.();
