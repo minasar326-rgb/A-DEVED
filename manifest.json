@@ -1,14 +1,16 @@
 {
-  "name": "إدارة محل الخياطة",
-  "short_name": "الخياطة",
-  "description": "نظام آمن لإدارة العملاء والمقاسات والطلبات والحسابات المالية لمحل الخياطة",
+  "name": "المعلم للخياطة",
+  "short_name": "المعلم للخياطة",
+  "description": "نظام المعلم للخياطة المتكامل لإدارة العملاء والمقاسات والطلبات والحسابات والبضاعة",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f5f7fa",
-  "theme_color": "#168575",
+  "orientation": "portrait-primary",
+  "background_color": "#24151a",
+  "theme_color": "#24151a",
+  "categories": ["business", "productivity"],
   "icons": [
     {
       "src": "icon-192.png",

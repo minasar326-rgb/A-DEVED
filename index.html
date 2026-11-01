@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>إدارة محل الخياطة</title>
-  <meta name="description" content="تطبيق لإدارة عملاء ومقاسات وطلبات ومدفوعات محل الخياطة" />
-  <meta name="theme-color" content="#0f1923" />
+  <title>المعلم للخياطة</title>
+  <meta name="description" content="تطبيق المعلم للخياطة لإدارة العملاء والمقاسات والطلبات والمدفوعات والبضاعة" />
+  <meta name="theme-color" content="#24151a" />
   <script>
     // 1. تصفية ومنع إزعاج أخطاء ورسائل إضافات المتصفح الخارجية (مثل إضافات الـ PDF)
     window.addEventListener('unhandledrejection', function(e) {
@@ -44,12 +44,12 @@
   <link rel="icon" href="icon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=2.8" />
+  <link rel="stylesheet" href="style.css?v=3.2" />
 </head>
 <body>
   <!-- الشريط العلوي -->
   <header class="topbar">
-    <h1>🧵 محل الخياطة</h1>
+    <h1>✂️ المعلم للخياطة</h1>
     <button id="notifyBtn" class="btn small ghost">🔔 تفعيل التنبيهات</button>
   </header>
 
@@ -70,7 +70,7 @@
       <div id="upcoming" class="list"></div>
       <h2>النسخ الاحتياطي وتقارير الوورد الشهرية</h2>
       <div class="row">
-        <button class="btn" id="exportWordBtn" style="background:#185a9d; color:#fff;">📄 تنزيل تقرير Word كامل الآن (.docx)</button>
+        <button class="btn" id="exportWordBtn">📄 تنزيل تقرير Word كامل الآن (.docx)</button>
         <button class="btn ghost" id="openWordFolderBtn">📂 فتح مجلد تقارير الوورد الشهرية</button>
         <button class="btn ghost" id="exportBtn">⬇️ تصدير نسخة JSON</button>
         <label class="btn ghost">⬆️ استيراد نسخة
@@ -184,6 +184,6 @@
   <!-- مكتبة توليد تقارير الوورد مباشرة في المتصفح لأي جهاز وموبايل -->
   <script src="docx.iife.js?v=2.7"></script>
   <script src="word-generator-client.js?v=2.7"></script>
-  <script src="app.js?v=2.7"></script>
+  <script src="app.js?v=3.2"></script>
 </body>
 </html>

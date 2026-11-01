@@ -91,19 +91,19 @@ function updateSyncStatusUI() {
   if (!foot || !dot || !text) return;
 
   if (isFirebaseOnline) {
-    dot.style.background = "#168575";
-    dot.style.boxShadow = "0 0 8px rgba(22, 133, 117, 0.8)";
+    dot.style.background = "#22c55e";
+    dot.style.boxShadow = "0 0 8px rgba(34, 197, 94, 0.8)";
     text.textContent = "متصل بالفايربيز (مزامنة فورية بين الأجهزة ⚡)";
   } else if (isServerOnline) {
-    dot.style.background = "#185a9d";
+    dot.style.background = "#fbbf24";
     dot.style.boxShadow = "none";
     text.textContent = "متصل بالسيرفر والقرص الصلب";
   } else if (location.protocol === "file:") {
-    dot.style.background = "#c15160";
+    dot.style.background = "#fb7185";
     dot.style.boxShadow = "none";
     text.textContent = "ملف مباشر (شغّل تشغيل_البرنامج.bat لحماية أموالك)";
   } else {
-    dot.style.background = "#b58527";
+    dot.style.background = "#d97706";
     dot.style.boxShadow = "none";
     text.textContent = firebaseStatusMessage || "يعمل محلياً بأمان (البيانات محفوظة على الجهاز)";
   }
@@ -282,7 +282,7 @@ function switchTab(tab) {
   });
   document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.id === "tab-" + tab));
   const topTitle = $(".topbar h1");
-  if (topTitle) topTitle.textContent = "محل الخياطة / " + tabNames[tab];
+  if (topTitle) topTitle.textContent = "المعلم للخياطة / " + tabNames[tab];
   window.scrollTo(0, 0);
 }
 
@@ -291,26 +291,30 @@ function setupInterface() {
   if (!nav) return;
   nav.setAttribute("aria-label", "أقسام المحل");
 
-  const sidebar = document.createElement("aside");
-  sidebar.className = "sidebar";
-  sidebar.innerHTML = `
-    <div class="brand">
-      <img src="icon-192.png" alt="شعار محل الخياطة">
-      <div><strong>محل الخياطة</strong><small>العملاء · الطلبات · الحسابات</small></div>
-    </div>
-    <div class="nav-label">إدارة المحل</div>
-  `;
-  sidebar.append(nav);
-  sidebar.insertAdjacentHTML("beforeend", `
-    <div class="sidebar-foot" id="syncStatusFoot">
-      <span class="local-dot"></span>
-      <span id="syncStatusText">البيانات محفوظة على هذا الجهاز</span>
-    </div>
-  `);
-  document.body.prepend(sidebar);
+  const isDesktop = window.matchMedia("(min-width: 901px)").matches;
 
-  const tabbar = $(".tabbar");
-  if (tabbar) tabbar.remove();
+  if (isDesktop) {
+    const sidebar = document.createElement("aside");
+    sidebar.className = "sidebar";
+    sidebar.innerHTML = `
+      <div class="brand">
+        <img src="icon-192.png" alt="شعار المعلم للخياطة">
+        <div><strong>المعلم للخياطة</strong><small>العملاء · الطلبات · الحسابات</small></div>
+      </div>
+      <div class="nav-label">إدارة المحل</div>
+    `;
+    sidebar.append(nav);
+    sidebar.insertAdjacentHTML("beforeend", `
+      <div class="sidebar-foot" id="syncStatusFoot">
+        <span class="local-dot"></span>
+        <span id="syncStatusText">البيانات محفوظة على هذا الجهاز</span>
+      </div>
+    `);
+    document.body.prepend(sidebar);
+
+    const tabbar = $(".tabbar");
+    if (tabbar) tabbar.remove();
+  }
 
   nav.querySelectorAll("button").forEach((b) => {
     const tab = b.dataset.tab;
@@ -324,7 +328,7 @@ function setupInterface() {
   const headerActions = document.createElement("div");
   headerActions.className = "header-actions";
   if (notify) headerActions.append(notify);
-  headerActions.insertAdjacentHTML("beforeend", '<span class="avatar" aria-label="محل الخياطة">خ</span>');
+  headerActions.insertAdjacentHTML("beforeend", '<span class="avatar" aria-label="المعلم للخياطة">م</span>');
   $(".topbar")?.append(headerActions);
 
   const date = new Date().toLocaleDateString("ar-EG", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
