@@ -1464,12 +1464,12 @@ async function openServerBackupsModal() {
 /* ---------- Service Worker والتنبيهات والتحديثات الإلزامية ---------- */
 let waitingPwaWorker = null;
 
-function showPwaUpdatePrompt(worker) {
-  if (localStorage.getItem("tailor_pwa_updated_v3.6") === "1") return;
+function activatePwaUpdate(worker) {
   waitingPwaWorker = worker;
-  const dialog = $("#updateDialog");
-  if (dialog && typeof dialog.showModal === "function") {
-    if (!dialog.open) dialog.showModal();
+  if (worker) {
+    worker.postMessage("SKIP_WAITING");
+  } else {
+    location.reload();
   }
 }
 
@@ -1492,15 +1492,15 @@ async function registerSW() {
   if (window.top !== window.self) return null;
 
   try {
-    const reg = await navigator.serviceWorker.register("sw.js?v=3.6", { updateViaCache: "none" });
-    if (reg.waiting) showPwaUpdatePrompt(reg.waiting);
+    const reg = await navigator.serviceWorker.register("sw.js?v=3.7", { updateViaCache: "none" });
+    if (reg.waiting) activatePwaUpdate(reg.waiting);
 
     reg.addEventListener("updatefound", () => {
       const worker = reg.installing;
       if (!worker) return;
       worker.addEventListener("statechange", () => {
         if (worker.state === "installed" && navigator.serviceWorker.controller) {
-          showPwaUpdatePrompt(worker);
+          activatePwaUpdate(worker);
         }
       });
     });
@@ -1514,6 +1514,10 @@ async function registerSW() {
     });
 
     if (reg.update) reg.update().catch(() => {});
+    setInterval(() => reg.update().catch(() => {}), 5 * 60 * 1000);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) reg.update().catch(() => {});
+    });
     try {
       if ("periodicSync" in reg) {
         await reg.periodicSync.register("check-reminders", { minInterval: 12 * 3600 * 1000 });
@@ -1526,34 +1530,7 @@ async function registerSW() {
   }
 }
 
-let deferredPwaInstallPrompt = null;
-window.addEventListener("beforeinstallprompt", (event) => {
-  event.preventDefault();
-  deferredPwaInstallPrompt = event;
-  const button = $("#installIconBtn");
-  if (button && !matchMedia("(display-mode: standalone)").matches) button.hidden = false;
-});
-
-$("#installIconBtn")?.addEventListener("click", async () => {
-  if (!deferredPwaInstallPrompt) {
-    toast("من قائمة المتصفح اختر: إضافة إلى الشاشة الرئيسية");
-    return;
-  }
-  deferredPwaInstallPrompt.prompt();
-  await deferredPwaInstallPrompt.userChoice.catch(() => null);
-  deferredPwaInstallPrompt = null;
-});
-
-$("#updateNowBtn")?.addEventListener("click", () => {
-  localStorage.setItem("tailor_pwa_updated_v3.6", "1");
-  $("#updateDialog")?.close?.();
-  if (!waitingPwaWorker) {
-    $("#updateDialog")?.close?.();
-    location.reload();
-    return;
-  }
-  waitingPwaWorker.postMessage("SKIP_WAITING");
-});
+// التحديثات تُفعّل تلقائياً؛ لا توجد نافذة أو زر يطلبان تدخل المستخدم.
 
 // مزامنة المواعيد مع الكاش ليتعامل معها Service Worker للتنبيهات
 async function syncReminders() {

@@ -1,5 +1,5 @@
 /* ===== Service Worker: التخزين للعمل بدون إنترنت + التنبيهات ===== */
-const CACHE = "tailor-v3.6";
+const CACHE = "tailor-v3.7";
 const FILES = [
   "./",
   "./index.html",
@@ -32,6 +32,7 @@ self.addEventListener("install", (e) => {
       }
     })
   );
+  self.skipWaiting();
 });
 
 // التفعيل: حذف النسخ القديمة واستلام التحكم فوراً
