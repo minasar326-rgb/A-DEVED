@@ -6,33 +6,33 @@
 /* ── المتغيرات الرئيسية ── */
 :root {
   /* خلفية وهيكل */
-  --bg:          #0f1923;
-  --bg2:         #141f2d;
-  --card:        #1a2638;
-  --card-hover:  #1f2e43;
-  --border:      #263347;
+  --bg:          #f5f2ec;
+  --bg2:         #ebe5da;
+  --card:        #fffdf8;
+  --card-hover:  #f8f2e5;
+  --border:      #ddd4c4;
   --border-glow: #ffffff14;
   --overlay:     #0a1018cc;
 
   /* نصوص */
-  --text:        #e8f1fb;
-  --text-dim:    #a0b4cc;
-  --muted:       #6a8aab;
+  --text:        #30302d;
+  --text-dim:    #66645f;
+  --muted:       #89847a;
 
-  /* الأخضر الزمردي — الأساسي */
-  --primary:       #0ecb81;
-  --primary-dark:  #09a969;
-  --primary-soft:  #0ecb8118;
-  --primary-glow:  #0ecb8133;
+  /* الأحمر الهادئ — الأساسي */
+  --primary:       #9a4f55;
+  --primary-dark:  #7d3d43;
+  --primary-soft:  rgba(154,79,85,.12);
+  --primary-glow:  rgba(154,79,85,.24);
 
-  /* البرتقالي الدافئ — طلبات / تحذير */
-  --warn:       #ff8c42;
-  --warn-dark:  #e07435;
-  --warn-soft:  #ff8c4218;
+  /* الذهبي الدافئ — طلبات / تحذير */
+  --warn:       #b99050;
+  --warn-dark:  #98743c;
+  --warn-soft:  rgba(185,144,80,.16);
 
   /* الأحمر المرجاني — أخطاء / ديون */
-  --danger:      #ff4f6e;
-  --danger-dark: #d93d59;
+  --danger:      #c96563;
+  --danger-dark: #9f4947;
   --danger-soft: #ff4f6e18;
 
   /* الذهبي — إحصائيات خاصة */

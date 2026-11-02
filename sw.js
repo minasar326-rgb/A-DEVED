@@ -1,5 +1,5 @@
 /* ===== Service Worker: التخزين للعمل بدون إنترنت + التنبيهات ===== */
-const CACHE = "tailor-v5.7";
+const CACHE = "tailor-v5.8";
 const FILES = [
   "./",
   "./index.html",
@@ -11,13 +11,15 @@ const FILES = [
   "./docx.iife.js",
   "./word-generator-client.js",
   "./manifest.json",
-  "./icon-180-v5.4.png",
-  "./icon-192-v5.4.png",
-  "./icon-512-v5.4.png",
+  "./widget-template.json",
+  "./widget-data.json",
+  "./icon-180-v5.8.png",
+  "./icon-192-v5.8.png",
+  "./icon-512-v5.8.png",
   "./screenshot-mobile-v5.4.png",
   "./screenshot-desktop-v5.4.png",
-  "./icon-192-v5.4.png",
-  "./icon-512-v5.4.png"
+  "./icon-192-v5.8.png",
+  "./icon-512-v5.8.png"
 ];
 const REMINDERS_URL = "./__reminders.json";
 
@@ -110,8 +112,8 @@ async function checkReminders() {
       if (o.dueDate <= tomorrow && !notified.has(o.id)) {
         await self.registration.showNotification("موعد تسليم خياطة ⏰", {
           body: `${o.type} - ${o.name} (تاريخ التسليم: ${o.dueDate})`,
-          icon: "icon-192-v5.4.png",
-          badge: "icon-192-v5.4.png",
+          icon: "icon-192-v5.8.png",
+          badge: "icon-192-v5.8.png",
           tag: "order-" + o.id,
           dir: "rtl",
           lang: "ar"
@@ -157,8 +159,8 @@ self.addEventListener("push", (e) => {
   const title = data.title || "المعلم للخياطة";
   const options = {
     body: data.body || "هناك تحديث جديد في تطبيق المعلم للخياطة",
-    icon: "./icon-192-v5.4.png",
-    badge: "./icon-192-v5.4.png",
+    icon: "./icon-192-v5.8.png",
+    badge: "./icon-192-v5.8.png",
     data: { url: data.url || "./" },
     tag: data.tag || "tailor-update",
     renotify: true

@@ -1,0 +1,24 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "المعلم للخياطة",
+      "weight": "Bolder",
+      "size": "Medium",
+      "color": "Attention"
+    },
+    {
+      "type": "TextBlock",
+      "text": "${title}",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "${description}",
+      "wrap": true
+    }
+  ]
+}
