@@ -2,10 +2,18 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="المعلم للخياطة" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no" />
   <title>المعلم للخياطة</title>
   <meta name="description" content="تطبيق المعلم للخياطة لإدارة العملاء والمقاسات والطلبات والمدفوعات والبضاعة" />
-  <meta name="theme-color" content="#f1ede6" />
+  <meta name="theme-color" content="#8f3d48" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#2f2528" media="(prefers-color-scheme: dark)" />
+  <meta name="msapplication-TileColor" content="#8f3d48" />
+  <meta name="msapplication-navbutton-color" content="#8f3d48" />
   <script>
     // 1. تصفية ومنع إزعاج أخطاء ورسائل إضافات المتصفح الخارجية (مثل إضافات الـ PDF)
     window.addEventListener('unhandledrejection', function(e) {
@@ -36,13 +44,13 @@
     if (location.protocol === "http:" || location.protocol === "https:") {
       const manifestLink = document.createElement("link");
       manifestLink.rel = "manifest";
-      manifestLink.href = "manifest.json?v=4.0";
+      manifestLink.href = "manifest.json?v=5.0";
       document.head.appendChild(manifestLink);
     }
   </script>
-  <link rel="apple-touch-icon" sizes="180x180" href="icon-180-v4.0.png?v=4.0" />
-  <link rel="icon" type="image/png" sizes="192x192" href="icon-192-v4.0.png?v=4.0" />
-  <link rel="stylesheet" href="style.css?v=4.0" />
+  <link rel="apple-touch-icon" sizes="180x180" href="icon-180-v5.0.png?v=5.0" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192-v5.0.png?v=5.0" />
+  <link rel="stylesheet" href="style.css?v=5.0" />
 </head>
 <body>
   <!-- الشريط العلوي -->
@@ -180,10 +188,10 @@
   <!-- مكتبات الفايربيز والمزامنة اللحظية الفورية بين جميع الأجهزة -->
   <script src="firebase-app.js?v=2.7"></script>
   <script src="firebase-firestore.js?v=2.7"></script>
-  <script src="firebase-sync.js?v=4.0"></script>
+  <script src="firebase-sync.js?v=5.0"></script>
   <!-- مكتبة توليد تقارير الوورد مباشرة في المتصفح لأي جهاز وموبايل -->
   <script src="docx.iife.js?v=2.7"></script>
   <script src="word-generator-client.js?v=2.7"></script>
-  <script src="app.js?v=4.0"></script>
+  <script src="app.js?v=5.0"></script>
 </body>
 </html>

@@ -1474,6 +1474,12 @@ function activatePwaUpdate(worker) {
 }
 
 let installPrompt = null;
+const isIosDevice = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandaloneMode = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+if (isIosDevice && !isStandaloneMode) {
+  const iosInstallButton = $("#installAppBtn");
+  if (iosInstallButton) iosInstallButton.hidden = false;
+}
 window.addEventListener("beforeinstallprompt", (event) => {
   event.preventDefault();
   installPrompt = event;
@@ -1505,7 +1511,7 @@ async function registerSW() {
   if (window.top !== window.self) return null;
 
   try {
-    const reg = await navigator.serviceWorker.register("sw.js?v=4.0", { updateViaCache: "none" });
+    const reg = await navigator.serviceWorker.register("sw.js?v=5.0", { updateViaCache: "none" });
     if (reg.waiting) activatePwaUpdate(reg.waiting);
 
     reg.addEventListener("updatefound", () => {
@@ -1545,7 +1551,11 @@ async function registerSW() {
 // التحديثات تُفعّل تلقائياً؛ زر التثبيت يسمح للمستخدم بإضافة التطبيق بالأيقونة الجديدة.
 $("#installAppBtn")?.addEventListener("click", async () => {
   if (!installPrompt) {
-    toast("افتح قائمة المتصفح واختر: إضافة إلى الشاشة الرئيسية أو تثبيت التطبيق");
+    if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+      toast("على آيفون وآيباد: اضغط مشاركة ثم «إضافة إلى الشاشة الرئيسية»");
+    } else {
+      toast("افتح قائمة المتصفح واختر: تثبيت التطبيق أو إضافة إلى الشاشة الرئيسية");
+    }
     return;
   }
   installPrompt.prompt();

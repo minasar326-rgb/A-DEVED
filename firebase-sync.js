@@ -57,14 +57,8 @@
 
       firestoreDb = firebase.firestore();
 
-      // تخزين Firestore المحلي؛ نتعامل مع تعدد التبويبات دون تهيئة إضافية متعارضة
-      try {
-        firestoreDb.enablePersistence({ synchronizeTabs: true }).catch((error) => {
-          if (error?.code !== "failed-precondition" && error?.code !== "unimplemented") {
-            console.debug("[Firebase Sync] التخزين المحلي غير متاح مؤقتاً:", error?.message || error);
-          }
-        });
-      } catch {}
+      // الحفظ الدائم الحقيقي للأجهزة محفوظ داخل قاعدة التطبيق والنسخ الاحتياطية؛
+      // ويُترك تخزين SDK الافتراضي لتجنب التحذير القديم enableMultiTabIndexedDbPersistence.
 
       docRef = firestoreDb.collection("tailor_shop").doc("database");
       isFirebaseReady = true;
