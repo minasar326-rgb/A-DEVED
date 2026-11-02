@@ -1780,3 +1780,127 @@ input::placeholder, textarea::placeholder { color: var(--muted); }
 @media (prefers-color-scheme: dark) {
   /* يحافظ التطبيق على هوية هادئة ثابتة بدل تبديل الألوان تلقائياً بشكل مفاجئ. */
 }
+
+/* الهوية النهائية الهادئة: أزرق بترولي + نعناع + أحمر ناعم + ذهب هادئ */
+:root {
+  --bg: #edf3f3;
+  --bg2: #f5f8f7;
+  --card: #ffffff;
+  --card-hover: #fbfdfc;
+  --border: #d6e1df;
+  --border-glow: rgba(25, 49, 61, .08);
+  --overlay: rgba(24, 49, 61, .35);
+  --text: #1d343d;
+  --text-dim: #516a71;
+  --muted: #71868a;
+  --primary: #287d78;
+  --primary-dark: #206963;
+  --primary-soft: rgba(40,125,120,.10);
+  --primary-glow: rgba(40,125,120,.18);
+  --warn: #c49754;
+  --warn-dark: #a77d40;
+  --warn-soft: rgba(196,151,84,.12);
+  --danger: #a94f4f;
+  --danger-dark: #914242;
+  --danger-soft: rgba(169,79,79,.10);
+  --gold: #caa568;
+  --gold-soft: rgba(202,165,104,.14);
+  --teal: #4e9690;
+  --teal-soft: rgba(78,150,144,.12);
+  --rose: #b96a70;
+  --rose-soft: rgba(185,106,112,.12);
+  --brown: #8c765f;
+  --brown-soft: rgba(140,118,95,.12);
+}
+
+body {
+  background: linear-gradient(145deg, #edf3f3 0%, #f6f8f5 58%, #eef4f3 100%) !important;
+  color: var(--text);
+}
+
+.topbar,
+.sidebar,
+.tabbar,
+.toptabs,
+.toast,
+.backup-card,
+.protocol-alert {
+  background-color: rgba(250,252,251,.96) !important;
+}
+
+.sidebar { display: none !important; }
+body.has-sidebar main,
+body > main,
+main {
+  margin-inline: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.topbar {
+  border-bottom: 1px solid var(--border) !important;
+  box-shadow: 0 5px 18px rgba(40, 73, 78, .06);
+}
+
+.topbar h1,
+.sidebar .brand strong {
+  background: linear-gradient(90deg, #287d78, #a94f4f 72%, #b49158);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.page-heading {
+  background: linear-gradient(135deg, rgba(40,125,120,.09), rgba(202,165,104,.08)) !important;
+  border-color: rgba(40,125,120,.16) !important;
+}
+
+.stat,
+.card,
+.guide-box,
+.empty,
+.backup-card,
+.measure-grid div,
+input,
+select,
+textarea,
+dialog,
+.quick-action {
+  border-color: var(--border) !important;
+}
+
+.stat,
+.card {
+  background: linear-gradient(145deg, rgba(255,255,255,.98), rgba(247,250,248,.98)) !important;
+  box-shadow: 0 10px 30px rgba(47,82,83,.09) !important;
+}
+
+.stat::before,
+.card::after {
+  background: linear-gradient(90deg, #287d78, #4e9690) !important;
+}
+
+.btn.primary,
+button.primary,
+.btn.danger:hover {
+  background: linear-gradient(135deg, #287d78, #1f6964) !important;
+  border-color: transparent !important;
+  color: #fff !important;
+}
+
+.stat-icon { background: var(--primary-soft) !important; color: var(--primary) !important; }
+.stat:nth-child(2) .stat-icon { background: var(--gold-soft) !important; color: var(--gold) !important; }
+.stat:nth-child(3) .stat-icon { background: var(--danger-soft) !important; color: var(--danger) !important; }
+.stat:nth-child(4) .stat-icon { background: var(--teal-soft) !important; color: var(--teal) !important; }
+
+.toptabs button.active,
+.tabbar button.active {
+  color: var(--primary) !important;
+  border-color: rgba(40,125,120,.18) !important;
+  background: var(--primary-soft) !important;
+}
+
+@media (max-width: 900px) {
+  .sidebar { display: none !important; }
+  .toptabs { position: sticky; top: 58px; z-index: 35; }
+}

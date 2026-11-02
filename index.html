@@ -10,10 +10,10 @@
   <meta name="format-detection" content="telephone=no" />
   <title>المعلم للخياطة</title>
   <meta name="description" content="تطبيق المعلم للخياطة لإدارة العملاء والمقاسات والطلبات والمدفوعات والبضاعة" />
-  <meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#2f2528" media="(prefers-color-scheme: dark)" />
-  <meta name="msapplication-TileColor" content="#8f3d48" />
-  <meta name="msapplication-navbutton-color" content="#8f3d48" />
+  <meta name="theme-color" content="#edf3f5" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#19313d" media="(prefers-color-scheme: dark)" />
+  <meta name="msapplication-TileColor" content="#19313d" />
+  <meta name="msapplication-navbutton-color" content="#19313d" />
   <script>
     // 1. تصفية ومنع إزعاج أخطاء ورسائل إضافات المتصفح الخارجية (مثل إضافات الـ PDF)
     window.addEventListener('unhandledrejection', function(e) {
@@ -44,17 +44,17 @@
     if (location.protocol === "http:" || location.protocol === "https:") {
       const manifestLink = document.createElement("link");
       manifestLink.rel = "manifest";
-      manifestLink.href = "manifest.json?v=5.2";
+      manifestLink.href = "manifest.json?v=5.3";
       document.head.appendChild(manifestLink);
 
       if ("serviceWorker" in navigator && window.top === window.self) {
-        navigator.serviceWorker.register("sw.js?v=5.2", { updateViaCache: "none" }).catch(() => {});
+        navigator.serviceWorker.register("sw.js?v=5.3", { updateViaCache: "none" }).catch(() => {});
       }
     }
   </script>
-  <link rel="apple-touch-icon" sizes="180x180" href="icon-180-v5.2.png?v=5.2" />
-  <link rel="icon" type="image/png" sizes="192x192" href="icon-192-v5.2.png?v=5.2" />
-  <link rel="stylesheet" href="style.css?v=5.2" />
+  <link rel="apple-touch-icon" sizes="180x180" href="icon-180-v5.3.png?v=5.3" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192-v5.3.png?v=5.3" />
+  <link rel="stylesheet" href="style.css?v=5.3" />
 </head>
 <body>
   <!-- الشريط العلوي -->
@@ -192,10 +192,10 @@
   <!-- مكتبات الفايربيز والمزامنة اللحظية الفورية بين جميع الأجهزة -->
   <script src="firebase-app.js?v=2.7"></script>
   <script src="firebase-firestore.js?v=2.7"></script>
-  <script src="firebase-sync.js?v=5.2"></script>
+  <script src="firebase-sync.js?v=5.3"></script>
   <!-- مكتبة توليد تقارير الوورد مباشرة في المتصفح لأي جهاز وموبايل -->
   <script src="docx.iife.js?v=2.7"></script>
   <script src="word-generator-client.js?v=2.7"></script>
-  <script src="app.js?v=5.2"></script>
+  <script src="app.js?v=5.3"></script>
 </body>
 </html>
