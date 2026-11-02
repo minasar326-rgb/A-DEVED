@@ -2,7 +2,7 @@
   "id": "./",
   "name": "المعلم للخياطة",
   "short_name": "المعلم للخياطة",
-  "start_url": "./index.html?v=5.6",
+  "start_url": "./index.html?v=5.7",
   "description": "نظام المعلم للخياطة المتكامل لإدارة العملاء والمقاسات والطلبات والحسابات والبضاعة",
   "lang": "ar",
   "dir": "rtl",
@@ -17,7 +17,7 @@
   "orientation": "any",
   "background_color": "#edf3f3",
   "theme_color": "#287d78",
-  "version": "5.6",
+  "version": "5.7",
   "prefer_related_applications": false,
   "categories": [
     "business",
@@ -43,7 +43,7 @@
     {
       "name": "العملاء والمقاسات",
       "short_name": "العملاء",
-      "url": "./index.html?v=5.6#customers",
+      "url": "./index.html?v=5.7#customers",
       "icons": [
         {
           "src": "icon-192-v5.4.png",
@@ -55,7 +55,7 @@
     {
       "name": "الطلبات",
       "short_name": "الطلبات",
-      "url": "./index.html?v=5.6#orders",
+      "url": "./index.html?v=5.7#orders",
       "icons": [
         {
           "src": "icon-192-v5.4.png",
@@ -70,6 +70,50 @@
   },
   "edge_side_panel": {
     "preferred_width": 480
+  },
+  "scope_extensions": [
+    {
+      "origin": "https://minasar326-rgb.github.io"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "./index.html?v=5.7#backup",
+      "accept": {
+        "application/json": [
+          ".json"
+        ],
+        "text/csv": [
+          ".csv"
+        ]
+      },
+      "icons": [
+        {
+          "src": "icon-192-v5.4.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+tailor",
+      "url": "./index.html?v=5.7&action=%s"
+    }
+  ],
+  "share_target": {
+    "action": "./index.html?v=5.7",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "note_taking": {
+    "new_note_url": "./index.html?v=5.7#orders?action=new"
   },
   "icons": [
     {
