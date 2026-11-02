@@ -313,19 +313,28 @@ function setupInterface() {
   if (!nav) return;
   nav.setAttribute("aria-label", "أقسام المحل");
 
-  const isDesktop = window.matchMedia("(min-width: 901px)").matches;
-
   // الشريط الجانبي لا يُستخدم؛ التنقل يظهر أعلى المحتوى على الكمبيوتر والموبايل.
   document.querySelector(".sidebar")?.remove();
-  if (isDesktop) {
-    const tabbar = $(".tabbar");
-    if (tabbar) tabbar.remove();
-  }
 
-  nav.querySelectorAll("button").forEach((b) => {
+  nav.querySelectorAll("button[data-tab]").forEach((b) => {
     const tab = b.dataset.tab;
     b.innerHTML = icon(tabIcons[tab]) + `<span>${tabNames[tab]}</span>` + (tab === "customers" || tab === "orders" || tab === "supplies" ? `<span class="nav-count" id="count-${tab}">0</span>` : "");
-    b.onclick = () => switchTab(tab);
+  });
+
+  // اربط النسختين فعلياً: الشريط السفلي في البورتريه والشريط العلوي في الاندسكيب والديسكتوب.
+  document.querySelectorAll(".toptabs button[data-tab], .tabbar button[data-tab]").forEach((b) => {
+    const tab = b.dataset.tab;
+    b.type = "button";
+    b.onclick = (event) => {
+      event.preventDefault();
+      switchTab(tab);
+    };
+    b.addEventListener("pointerup", (event) => {
+      const hit = document.elementFromPoint(event.clientX, event.clientY);
+      if (!hit || !b.contains(hit)) {
+        console.warn("[Navigation] Bottom nav pointer hit mismatch", hit?.className || hit?.tagName);
+      }
+    }, { passive: true });
   });
 
   const notify = $("#notifyBtn");
@@ -1517,7 +1526,7 @@ async function registerSW() {
   if (window.top !== window.self) return null;
 
   try {
-    const reg = await navigator.serviceWorker.register("sw.js?v=5.8", { updateViaCache: "none" });
+    const reg = await navigator.serviceWorker.register("sw.js?v=5.9", { updateViaCache: "none" });
     if (reg.waiting) activatePwaUpdate(reg.waiting);
 
     reg.addEventListener("updatefound", () => {

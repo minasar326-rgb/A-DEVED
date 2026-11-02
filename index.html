@@ -14,7 +14,7 @@
   <meta name="theme-color" content="#24191b" media="(prefers-color-scheme: dark)" />
   <meta name="msapplication-TileColor" content="#9a4f55" />
   <meta name="msapplication-navbutton-color" content="#19313d" />
-  <link rel="manifest" href="manifest.json?v=5.8" />
+  <link rel="manifest" href="manifest.json?v=5.9" />
   <script>
     // 1. تصفية ومنع إزعاج أخطاء ورسائل إضافات المتصفح الخارجية (مثل إضافات الـ PDF)
     window.addEventListener('unhandledrejection', function(e) {
@@ -43,12 +43,12 @@
 
     // 2. تسجيل Service Worker عبر بروتوكول HTTP/HTTPS فقط
     if ((location.protocol === "http:" || location.protocol === "https:") && "serviceWorker" in navigator && window.top === window.self) {
-      navigator.serviceWorker.register("sw.js?v=5.8", { updateViaCache: "none" }).catch(() => {});
+      navigator.serviceWorker.register("sw.js?v=5.9", { updateViaCache: "none" }).catch(() => {});
     }
   </script>
-  <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png?v=5.8" />
-  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=5.8" />
-  <link rel="stylesheet" href="style.css?v=5.8" />
+  <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png?v=5.9" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=5.9" />
+  <link rel="stylesheet" href="style.css?v=5.9" />
 </head>
 <body>
   <!-- الشريط العلوي -->
@@ -186,10 +186,10 @@
   <!-- مكتبات الفايربيز والمزامنة اللحظية الفورية بين جميع الأجهزة -->
   <script src="firebase-app.js?v=2.7"></script>
   <script src="firebase-firestore.js?v=2.7"></script>
-  <script src="firebase-sync.js?v=5.8"></script>
+  <script src="firebase-sync.js?v=5.9"></script>
   <!-- مكتبة توليد تقارير الوورد مباشرة في المتصفح لأي جهاز وموبايل -->
   <script src="docx.iife.js?v=2.7"></script>
   <script src="word-generator-client.js?v=2.7"></script>
-  <script src="app.js?v=5.8"></script>
+  <script src="app.js?v=5.9"></script>
 </body>
 </html>

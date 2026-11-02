@@ -739,10 +739,18 @@ dialog h2 {
    الاستجابة — موبايل
 ══════════════════════════════ */
 @media (max-width: 640px) {
-  main { padding: 18px 14px 80px; }
+  main { padding: 18px 14px calc(92px + env(safe-area-inset-bottom)); }
 
-  .topbar { height: 58px; padding: 0 14px; }
-  .topbar h1 { font-size: 14px; }
+  .topbar {
+    height: calc(58px + env(safe-area-inset-top));
+    padding: env(safe-area-inset-top) 12px 0;
+    gap: 8px;
+  }
+  .topbar h1 { font-size: 13px; line-height: 1.15; white-space: nowrap; }
+  .header-date { display: none; }
+  .header-actions { gap: 4px; flex-shrink: 0; }
+  .header-actions .btn { max-width: 120px; min-height: 38px; padding-inline: 8px; white-space: normal; line-height: 1.15; font-size: 10px; }
+  .header-actions .avatar { width: 32px; height: 32px; }
 
   .toptabs { padding: 10px 10px 0; gap: 2px; }
   .toptabs button { padding: 8px 12px 10px; font-size: 12px; }
@@ -775,11 +783,13 @@ dialog h2 {
   .tabbar {
     display: flex;
     position: fixed; bottom: 0; inset-inline: 0;
-    z-index: 60;
+    z-index: 1000;
+    isolation: isolate;
     background: var(--bg2);
     border-top: 1px solid var(--border);
     box-shadow: 0 -8px 32px #00000060;
     padding-bottom: env(safe-area-inset-bottom);
+    pointer-events: auto;
   }
   .tabbar button {
     flex: 1; display: flex; flex-direction: column;
@@ -788,6 +798,12 @@ dialog h2 {
     border: 0; background: transparent;
     color: var(--muted); font-size: 10px; font-weight: 600;
     min-height: 60px;
+    position: relative;
+    z-index: 1001;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    pointer-events: auto;
+    cursor: pointer;
     transition: color .18s;
   }
   .tabbar button.active { color: var(--primary); }
@@ -1760,16 +1776,18 @@ input::placeholder, textarea::placeholder { color: var(--muted); }
     padding-top: env(safe-area-inset-top);
     padding-inline: 12px;
   }
-  .header-actions { gap: 5px; }
-  .header-actions .btn { max-width: 148px; white-space: normal; line-height: 1.25; min-height: 40px; }
+  .header-actions { gap: 4px; }
+  .header-actions .btn { max-width: 120px; white-space: normal; line-height: 1.15; min-height: 38px; font-size: 10px; padding-inline: 8px; }
   .stats { gap: 9px; }
   .stat { min-height: 118px; border-radius: 20px !important; }
   .card, .customer-card, .order-card, .supply-card, .payment-card { border-radius: 20px !important; }
   .tabbar {
+    z-index: 1000;
     min-height: calc(64px + env(safe-area-inset-bottom));
     padding-bottom: env(safe-area-inset-bottom);
     border-radius: 18px 18px 0 0;
     box-shadow: 0 -8px 28px rgba(92,75,62,.11);
+    pointer-events: auto;
   }
   dialog {
     max-width: calc(100vw - 24px);
