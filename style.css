@@ -60,8 +60,27 @@
   --shadow-lg:  0 16px 56px #00000070;
 }
 
-/* ── إعادة تعيين عامة ── */
+/* ── إعادة تعيين عامة + حدود RTL ── */
+html, body {
+  max-width: 100%;
+  min-width: 0;
+}
+html { overflow-x: clip; }
+body { overflow-x: clip; }
 *, *::before, *::after { box-sizing: border-box; }
+img, video, canvas, svg { max-width: 100%; }
+main, .topbar, .header-actions, .header-actions > *, .tabbar, .tabbar button,
+.page-heading, .card, .customer-card, .list, .measure-grid, .measure-grid > * {
+  min-width: 0;
+}
+.card, .customer-card, .page-heading, .measure-grid, .list {
+  max-width: 100%;
+}
+.card, .customer-card, .page-heading, .measure-grid div,
+.customer-card, .card .meta, .card .title {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
 
 body {
   margin: 0;
@@ -159,9 +178,16 @@ h3 { font-size: 16px; color: var(--text); }
 ══════════════════════════════ */
 .toptabs {
   display: flex;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   gap: 6px;
   padding: 16px 20px 0;
   overflow-x: auto;
+  overflow-y: hidden;
+  contain: inline-size;
+  flex-wrap: nowrap;
+
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   background: var(--bg2);
@@ -743,19 +769,26 @@ dialog h2 {
 
   .topbar {
     height: calc(58px + env(safe-area-inset-top));
+    min-width: 0;
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
     padding: env(safe-area-inset-top) 12px 0;
-    gap: 8px;
+    gap: 6px;
   }
-  .topbar h1 { font-size: 13px; line-height: 1.15; white-space: nowrap; }
+  .topbar > div:first-child { min-width: 0; overflow: hidden; }
+  .topbar h1 { font-size: 12px; line-height: 1.15; white-space: normal; overflow-wrap: anywhere; }
   .header-date { display: none; }
-  .header-actions { gap: 4px; flex-shrink: 0; }
-  .header-actions .btn { max-width: 120px; min-height: 38px; padding-inline: 8px; white-space: normal; line-height: 1.15; font-size: 10px; }
-  .header-actions .avatar { width: 32px; height: 32px; }
+  .header-actions { gap: 4px; min-width: 0; max-width: 132px; flex-wrap: nowrap; }
+  .header-actions .btn { max-width: 96px; min-width: 0; min-height: 38px; padding-inline: 7px; white-space: normal; line-height: 1.15; font-size: 9px; }
+  .header-actions .avatar { width: 30px; height: 30px; flex: 0 0 30px; }
 
   .toptabs { padding: 10px 10px 0; gap: 2px; }
   .toptabs button { padding: 8px 12px 10px; font-size: 12px; }
 
-  .stats { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 20px; }
+  .measure-grid { grid-template-columns: repeat(auto-fit, minmax(min(115px, 100%), 1fr)); }
+  .measure-grid > * { min-width: 0; }
   .stat { padding: 14px 12px 12px; }
   .stat .value { font-size: 20px; }
   .stat:last-child { grid-column: 1 / -1; }
@@ -1467,22 +1500,23 @@ dialog { background: #1e293b; }
   .toptabs { display: none; }
 
   .tabbar {
-    inset-inline: 10px;
-    bottom: 8px;
-    bottom: calc(8px + env(safe-area-inset-bottom));
-    width: auto;
+    inset-inline: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    min-height: calc(64px + env(safe-area-inset-bottom));
     border: 1px solid var(--border);
-    border-radius: 24px;
+    border-radius: 0;
     background: rgba(23, 32, 51, .94);
     box-shadow: 0 16px 40px rgba(0,0,0,.38);
     backdrop-filter: blur(18px);
-    padding-bottom: 0;
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
   .tabbar button {
     min-height: 64px;
-    border-radius: 20px;
-    margin: 4px 2px;
+    border-radius: 0;
+    margin: 0;
   }
 
   .tabbar button.active {

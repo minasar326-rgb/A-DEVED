@@ -340,11 +340,12 @@ function setupInterface() {
   const notify = $("#notifyBtn");
   if (notify) notify.innerHTML = icon("bell") + '<span>تفعيل التنبيهات</span>';
 
-  const headerActions = document.createElement("div");
-  headerActions.className = "header-actions";
-  if (notify) headerActions.append(notify);
-  headerActions.insertAdjacentHTML("beforeend", '<span class="avatar" aria-label="المعلم للخياطة">م</span>');
-  $(".topbar")?.append(headerActions);
+  // لا ننشئ حاوية أزرار جديدة: نستخدم حاوية الهيدر الموجودة حتى لا يتضاعف/ينزاح layout في RTL.
+  const headerActions = $(".topbar > .header-actions") || null;
+  if (headerActions && notify && !headerActions.contains(notify)) headerActions.append(notify);
+  if (headerActions && !headerActions.querySelector(".avatar")) {
+    headerActions.insertAdjacentHTML("beforeend", '<span class="avatar" aria-label="المعلم للخياطة">م</span>');
+  }
 
   const date = new Date().toLocaleDateString("ar-EG", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
   $(".topbar h1")?.insertAdjacentHTML("afterend", `<span class="header-date">${date}</span>`);
@@ -1526,7 +1527,7 @@ async function registerSW() {
   if (window.top !== window.self) return null;
 
   try {
-    const reg = await navigator.serviceWorker.register("sw.js?v=5.9", { updateViaCache: "none" });
+    const reg = await navigator.serviceWorker.register("sw.js?v=5.11", { updateViaCache: "none" });
     if (reg.waiting) activatePwaUpdate(reg.waiting);
 
     reg.addEventListener("updatefound", () => {
