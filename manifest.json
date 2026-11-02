@@ -2,7 +2,7 @@
   "id": "./",
   "name": "المعلم للخياطة",
   "short_name": "المعلم للخياطة",
-  "start_url": "./index.html?v=5.5",
+  "start_url": "./index.html?v=5.6",
   "description": "نظام المعلم للخياطة المتكامل لإدارة العملاء والمقاسات والطلبات والحسابات والبضاعة",
   "lang": "ar",
   "dir": "rtl",
@@ -10,13 +10,14 @@
   "display": "standalone",
   "display_override": [
     "window-controls-overlay",
+    "tabbed",
     "standalone",
     "minimal-ui"
   ],
   "orientation": "any",
   "background_color": "#edf3f3",
   "theme_color": "#287d78",
-  "version": "5.5",
+  "version": "5.6",
   "prefer_related_applications": false,
   "categories": [
     "business",
@@ -42,7 +43,7 @@
     {
       "name": "العملاء والمقاسات",
       "short_name": "العملاء",
-      "url": "./index.html?v=5.5#customers",
+      "url": "./index.html?v=5.6#customers",
       "icons": [
         {
           "src": "icon-192-v5.4.png",
@@ -54,7 +55,7 @@
     {
       "name": "الطلبات",
       "short_name": "الطلبات",
-      "url": "./index.html?v=5.5#orders",
+      "url": "./index.html?v=5.6#orders",
       "icons": [
         {
           "src": "icon-192-v5.4.png",
@@ -66,6 +67,9 @@
   ],
   "launch_handler": {
     "client_mode": "navigate-existing"
+  },
+  "edge_side_panel": {
+    "preferred_width": 480
   },
   "icons": [
     {

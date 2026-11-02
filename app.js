@@ -255,7 +255,7 @@ const iconPaths = {
   download: '<path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/>',
   upload: '<path d="M12 16V4m-5 5 5-5 5 5M4 17v4h16v-4"/>',
   arrow: '<path d="M19 12H5m6-6-6 6 6 6"/>',
-  package: '<path d="m7.5 4.27 9 5.55M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/>',
+  package: '<path d="m7.5 4.27 9 5.65M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/>',
   server: '<rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/>'
 };
 const icon = (name) => `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${iconPaths[name] || iconPaths.orders}</svg>`;
@@ -1495,7 +1495,7 @@ async function registerSW() {
   if (window.top !== window.self) return null;
 
   try {
-    const reg = await navigator.serviceWorker.register("sw.js?v=5.5", { updateViaCache: "none" });
+    const reg = await navigator.serviceWorker.register("sw.js?v=5.6", { updateViaCache: "none" });
     if (reg.waiting) activatePwaUpdate(reg.waiting);
 
     reg.addEventListener("updatefound", () => {

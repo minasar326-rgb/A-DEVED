@@ -1,5 +1,5 @@
 /* ===== Service Worker: التخزين للعمل بدون إنترنت + التنبيهات ===== */
-const CACHE = "tailor-v5.5";
+const CACHE = "tailor-v5.6";
 const FILES = [
   "./",
   "./index.html",
@@ -141,6 +141,29 @@ self.addEventListener("periodicsync", (e) => {
   if (e.tag === "check-reminders") {
     e.waitUntil(checkReminders());
   }
+});
+
+// مزامنة عند عودة الاتصال بالشبكة
+self.addEventListener("sync", (e) => {
+  if (e.tag === "tailor-background-sync") {
+    e.waitUntil(checkReminders());
+  }
+});
+
+// دعم الإشعارات الواردة من مزود خارجي دون الاعتماد على بيانات حساسة
+self.addEventListener("push", (e) => {
+  let data = {};
+  try { data = e.data ? e.data.json() : {}; } catch { data = {}; }
+  const title = data.title || "المعلم للخياطة";
+  const options = {
+    body: data.body || "هناك تحديث جديد في تطبيق المعلم للخياطة",
+    icon: "./icon-192-v5.4.png",
+    badge: "./icon-192-v5.4.png",
+    data: { url: data.url || "./" },
+    tag: data.tag || "tailor-update",
+    renotify: true
+  };
+  e.waitUntil(self.registration.showNotification(title, options));
 });
 
 // الضغط على الإشعار يفتح التطبيق
