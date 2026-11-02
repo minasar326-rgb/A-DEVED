@@ -2,7 +2,7 @@
   "id": "./",
   "name": "المعلم للخياطة",
   "short_name": "المعلم للخياطة",
-  "start_url": "./index.html?v=5.4",
+  "start_url": "./index.html?v=5.5",
   "description": "نظام المعلم للخياطة المتكامل لإدارة العملاء والمقاسات والطلبات والحسابات والبضاعة",
   "lang": "ar",
   "dir": "rtl",
@@ -16,7 +16,7 @@
   "orientation": "any",
   "background_color": "#edf3f3",
   "theme_color": "#287d78",
-  "version": "5.4",
+  "version": "5.5",
   "prefer_related_applications": false,
   "categories": [
     "business",
@@ -24,14 +24,14 @@
   ],
   "screenshots": [
     {
-      "src": "screenshot-mobile-v5.2.png",
+      "src": "screenshot-mobile-v5.4.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "لوحة المعلم للخياطة على الهاتف"
     },
     {
-      "src": "screenshot-desktop-v5.2.png",
+      "src": "screenshot-desktop-v5.4.png",
       "sizes": "1440x900",
       "type": "image/png",
       "form_factor": "wide",
@@ -42,10 +42,10 @@
     {
       "name": "العملاء والمقاسات",
       "short_name": "العملاء",
-      "url": "./index.html?v=5.4#customers",
+      "url": "./index.html?v=5.5#customers",
       "icons": [
         {
-          "src": "icon-192.png",
+          "src": "icon-192-v5.4.png",
           "sizes": "192x192",
           "type": "image/png"
         }
@@ -54,10 +54,10 @@
     {
       "name": "الطلبات",
       "short_name": "الطلبات",
-      "url": "./index.html?v=5.4#orders",
+      "url": "./index.html?v=5.5#orders",
       "icons": [
         {
-          "src": "icon-192.png",
+          "src": "icon-192-v5.4.png",
           "sizes": "192x192",
           "type": "image/png"
         }
@@ -69,25 +69,25 @@
   },
   "icons": [
     {
-      "src": "icon-180.png",
+      "src": "icon-180-v5.4.png",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-192.png",
+      "src": "icon-192-v5.4.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-512.png",
+      "src": "icon-512-v5.4.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-512.png",
+      "src": "icon-512-v5.4.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
