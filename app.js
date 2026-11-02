@@ -1505,7 +1505,7 @@ async function registerSW() {
   if (window.top !== window.self) return null;
 
   try {
-    const reg = await navigator.serviceWorker.register("sw.js?v=3.9", { updateViaCache: "none" });
+    const reg = await navigator.serviceWorker.register("sw.js?v=4.0", { updateViaCache: "none" });
     if (reg.waiting) activatePwaUpdate(reg.waiting);
 
     reg.addEventListener("updatefound", () => {

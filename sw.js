@@ -1,5 +1,5 @@
 /* ===== Service Worker: التخزين للعمل بدون إنترنت + التنبيهات ===== */
-const CACHE = "tailor-v3.9";
+const CACHE = "tailor-v4.0";
 const FILES = [
   "./",
   "./index.html",
@@ -11,9 +11,9 @@ const FILES = [
   "./docx.iife.js",
   "./word-generator-client.js",
   "./manifest.json",
-  "./icon-180-v3.9.png",
-  "./icon-192-v3.9.png",
-  "./icon-512-v3.9.png",
+  "./icon-180-v4.0.png",
+  "./icon-192-v4.0.png",
+  "./icon-512-v4.0.png",
   "./icon-192.png",
   "./icon-512.png"
 ];
@@ -108,8 +108,8 @@ async function checkReminders() {
       if (o.dueDate <= tomorrow && !notified.has(o.id)) {
         await self.registration.showNotification("موعد تسليم خياطة ⏰", {
           body: `${o.type} - ${o.name} (تاريخ التسليم: ${o.dueDate})`,
-          icon: "icon-192-v3.9.png",
-          badge: "icon-192-v3.9.png",
+          icon: "icon-192-v4.0.png",
+          badge: "icon-192-v4.0.png",
           tag: "order-" + o.id,
           dir: "rtl",
           lang: "ar"

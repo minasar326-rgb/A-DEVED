@@ -2,7 +2,7 @@
   "id": "./",
   "name": "المعلم للخياطة",
   "short_name": "المعلم للخياطة",
-  "start_url": "./index.html?v=3.9",
+  "start_url": "./index.html?v=4.0",
   "description": "نظام المعلم للخياطة المتكامل لإدارة العملاء والمقاسات والطلبات والحسابات والبضاعة",
   "lang": "ar",
   "dir": "rtl",
@@ -11,24 +11,24 @@
   "orientation": "portrait-primary",
   "background_color": "#f1ede6",
   "theme_color": "#965f62",
-  "version": "3.9",
+  "version": "4.0",
 
   "categories": ["business", "productivity"],
   "icons": [
     {
-      "src": "icon-192-v3.9.png",
+      "src": "icon-192-v4.0.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-512-v3.9.png",
+      "src": "icon-512-v4.0.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-512-v3.9.png",
+      "src": "icon-512-v4.0.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

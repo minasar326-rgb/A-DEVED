@@ -1532,7 +1532,7 @@ dialog { background: #171717; }
 .install-icon-button { width: 100%; min-height: 48px; margin-top: 10px; font-weight: 800; }
 
 /* ══════════════════════════════
-   نُسخة الألوان الهادئة v3.9
+   نسخة الألوان الهادئة النهائية v4.0
 ══════════════════════════════ */
 :root {
   --bg: #ebe7df;
@@ -1585,3 +1585,66 @@ input::placeholder, textarea::placeholder { color: var(--muted); }
 .toast { background: linear-gradient(135deg, #fffdf8, #f2eee5); color: var(--text); border-color: rgba(139,78,82,.18); box-shadow: var(--shadow); }
 dialog { color: var(--text); background: #fffdf8; border-color: var(--border); }
 .install-app-bar { gap: 8px; }
+
+/* هوية ألوان فاتحة نهائية قوية — تمنع أي ثيم أو ملف قديم من إعادة اللون الداكن */
+html, body {
+  background: linear-gradient(145deg, #f2eee6 0%, #e7dfd2 55%, #f7f3eb 100%) !important;
+  color: #453f3a !important;
+}
+body::before {
+  opacity: 1 !important;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(139,78,82,.09), transparent 28rem),
+    radial-gradient(circle at 92% 100%, rgba(200,169,106,.12), transparent 26rem) !important;
+}
+.topbar, .sidebar, .tabbar {
+  background: rgba(255,253,248,.97) !important;
+  color: #453f3a !important;
+  border-color: rgba(139,78,82,.12) !important;
+  backdrop-filter: blur(18px);
+}
+.page-heading, .stat, .card, .customer-card, .order-card, .supply-card, .payment-card, .backup-card,
+.modal-content, dialog {
+  background: rgba(255,253,248,.98) !important;
+  color: #453f3a !important;
+  border-color: rgba(139,78,82,.13) !important;
+  box-shadow: 0 12px 34px rgba(92,75,62,.09) !important;
+}
+.stat-icon, .empty > .icon {
+  background: rgba(139,78,82,.10) !important;
+  color: #8b4e52 !important;
+}
+.stat:nth-child(2) .stat-icon { background: rgba(200,169,106,.14) !important; color: #9b7a41 !important; }
+.stat:nth-child(3) .stat-icon { background: rgba(113,143,135,.14) !important; color: #557a71 !important; }
+.stat:nth-child(4) .stat-icon { background: rgba(197,134,130,.14) !important; color: #a86a67 !important; }
+.btn.primary, .btn:not(.ghost):not(.danger) {
+  background: linear-gradient(135deg, #965f62, #7f494c) !important;
+  color: #fff !important;
+  border: 0 !important;
+}
+.btn.ghost {
+  background: rgba(255,253,248,.94) !important;
+  color: #5f5750 !important;
+  border-color: rgba(139,78,82,.14) !important;
+}
+.tabbar button.active, .toptabs button.active, .sidebar .toptabs button.active {
+  background: linear-gradient(135deg, rgba(139,78,82,.13), rgba(200,169,106,.12)) !important;
+  color: #754043 !important;
+  border-color: rgba(139,78,82,.16) !important;
+}
+input, select, textarea {
+  background: rgba(255,253,248,.96) !important;
+  color: #453f3a !important;
+  border-color: rgba(139,78,82,.14) !important;
+}
+.toast {
+  background: linear-gradient(135deg, #fffdf8, #f2eee5) !important;
+  color: #453f3a !important;
+  border-color: rgba(139,78,82,.16) !important;
+}
+
+@media (max-width: 760px) {
+  html, body { background: #eee9e0 !important; }
+  .topbar, .tabbar { background: rgba(255,253,248,.98) !important; }
+  .card, .stat { border-radius: 22px !important; }
+}
