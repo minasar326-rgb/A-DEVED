@@ -44,13 +44,17 @@
     if (location.protocol === "http:" || location.protocol === "https:") {
       const manifestLink = document.createElement("link");
       manifestLink.rel = "manifest";
-      manifestLink.href = "manifest.json?v=5.1";
+      manifestLink.href = "manifest.json?v=5.2";
       document.head.appendChild(manifestLink);
+
+      if ("serviceWorker" in navigator && window.top === window.self) {
+        navigator.serviceWorker.register("sw.js?v=5.2", { updateViaCache: "none" }).catch(() => {});
+      }
     }
   </script>
-  <link rel="apple-touch-icon" sizes="180x180" href="icon-180-v5.1.png?v=5.1" />
-  <link rel="icon" type="image/png" sizes="192x192" href="icon-192-v5.1.png?v=5.1" />
-  <link rel="stylesheet" href="style.css?v=5.1" />
+  <link rel="apple-touch-icon" sizes="180x180" href="icon-180-v5.2.png?v=5.2" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192-v5.2.png?v=5.2" />
+  <link rel="stylesheet" href="style.css?v=5.2" />
 </head>
 <body>
   <!-- الشريط العلوي -->
@@ -188,10 +192,10 @@
   <!-- مكتبات الفايربيز والمزامنة اللحظية الفورية بين جميع الأجهزة -->
   <script src="firebase-app.js?v=2.7"></script>
   <script src="firebase-firestore.js?v=2.7"></script>
-  <script src="firebase-sync.js?v=5.1"></script>
+  <script src="firebase-sync.js?v=5.2"></script>
   <!-- مكتبة توليد تقارير الوورد مباشرة في المتصفح لأي جهاز وموبايل -->
   <script src="docx.iife.js?v=2.7"></script>
   <script src="word-generator-client.js?v=2.7"></script>
-  <script src="app.js?v=5.1"></script>
+  <script src="app.js?v=5.2"></script>
 </body>
 </html>
