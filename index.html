@@ -10,7 +10,7 @@
   <meta name="format-detection" content="telephone=no" />
   <title>المعلم للخياطة</title>
   <meta name="description" content="تطبيق المعلم للخياطة لإدارة العملاء والمقاسات والطلبات والمدفوعات والبضاعة" />
-  <meta name="theme-color" content="#8f3d48" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#f7f4ed" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#2f2528" media="(prefers-color-scheme: dark)" />
   <meta name="msapplication-TileColor" content="#8f3d48" />
   <meta name="msapplication-navbutton-color" content="#8f3d48" />
@@ -44,13 +44,13 @@
     if (location.protocol === "http:" || location.protocol === "https:") {
       const manifestLink = document.createElement("link");
       manifestLink.rel = "manifest";
-      manifestLink.href = "manifest.json?v=5.0";
+      manifestLink.href = "manifest.json?v=5.1";
       document.head.appendChild(manifestLink);
     }
   </script>
-  <link rel="apple-touch-icon" sizes="180x180" href="icon-180-v5.0.png?v=5.0" />
-  <link rel="icon" type="image/png" sizes="192x192" href="icon-192-v5.0.png?v=5.0" />
-  <link rel="stylesheet" href="style.css?v=5.0" />
+  <link rel="apple-touch-icon" sizes="180x180" href="icon-180-v5.1.png?v=5.1" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192-v5.1.png?v=5.1" />
+  <link rel="stylesheet" href="style.css?v=5.1" />
 </head>
 <body>
   <!-- الشريط العلوي -->
@@ -188,10 +188,10 @@
   <!-- مكتبات الفايربيز والمزامنة اللحظية الفورية بين جميع الأجهزة -->
   <script src="firebase-app.js?v=2.7"></script>
   <script src="firebase-firestore.js?v=2.7"></script>
-  <script src="firebase-sync.js?v=5.0"></script>
+  <script src="firebase-sync.js?v=5.1"></script>
   <!-- مكتبة توليد تقارير الوورد مباشرة في المتصفح لأي جهاز وموبايل -->
   <script src="docx.iife.js?v=2.7"></script>
   <script src="word-generator-client.js?v=2.7"></script>
-  <script src="app.js?v=5.0"></script>
+  <script src="app.js?v=5.1"></script>
 </body>
 </html>

@@ -1511,7 +1511,7 @@ async function registerSW() {
   if (window.top !== window.self) return null;
 
   try {
-    const reg = await navigator.serviceWorker.register("sw.js?v=5.0", { updateViaCache: "none" });
+    const reg = await navigator.serviceWorker.register("sw.js?v=5.1", { updateViaCache: "none" });
     if (reg.waiting) activatePwaUpdate(reg.waiting);
 
     reg.addEventListener("updatefound", () => {
@@ -1554,7 +1554,7 @@ $("#installAppBtn")?.addEventListener("click", async () => {
     if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
       toast("على آيفون وآيباد: اضغط مشاركة ثم «إضافة إلى الشاشة الرئيسية»");
     } else {
-      toast("افتح قائمة المتصفح واختر: تثبيت التطبيق أو إضافة إلى الشاشة الرئيسية");
+      toast("افتح قائمة المتصفح واختر: إضافة إلى الشاشة الرئيسية أو تثبيت التطبيق");
     }
     return;
   }

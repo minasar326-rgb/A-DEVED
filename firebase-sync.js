@@ -57,8 +57,7 @@
 
       firestoreDb = firebase.firestore();
 
-      // الحفظ الدائم الحقيقي للأجهزة محفوظ داخل قاعدة التطبيق والنسخ الاحتياطية؛
-      // ويُترك تخزين SDK الافتراضي لتجنب التحذير القديم enableMultiTabIndexedDbPersistence.
+      // لا يُفعّل تخزين IndexedDB القديم؛ التطبيق يستخدم التخزين المحلي الدائم وService Worker للأداء والاستقرار.
 
       docRef = firestoreDb.collection("tailor_shop").doc("database");
       isFirebaseReady = true;
