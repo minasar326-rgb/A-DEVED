@@ -1473,6 +1473,19 @@ function activatePwaUpdate(worker) {
   }
 }
 
+let installPrompt = null;
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  installPrompt = event;
+  const button = $("#installAppBtn");
+  if (button) button.hidden = false;
+});
+window.addEventListener("appinstalled", () => {
+  installPrompt = null;
+  const button = $("#installAppBtn");
+  if (button) button.hidden = true;
+});
+
 async function registerSW() {
   if (navigator.storage?.persist) {
     navigator.storage.persist().then((persisted) => {
@@ -1492,7 +1505,7 @@ async function registerSW() {
   if (window.top !== window.self) return null;
 
   try {
-    const reg = await navigator.serviceWorker.register("sw.js?v=3.8", { updateViaCache: "none" });
+    const reg = await navigator.serviceWorker.register("sw.js?v=3.9", { updateViaCache: "none" });
     if (reg.waiting) activatePwaUpdate(reg.waiting);
 
     reg.addEventListener("updatefound", () => {
@@ -1529,7 +1542,16 @@ async function registerSW() {
   }
 }
 
-// التحديثات تُفعّل تلقائياً؛ لا توجد نافذة أو زر يطلبان تدخل المستخدم.
+// التحديثات تُفعّل تلقائياً؛ زر التثبيت يسمح للمستخدم بإضافة التطبيق بالأيقونة الجديدة.
+$("#installAppBtn")?.addEventListener("click", async () => {
+  if (!installPrompt) {
+    toast("افتح قائمة المتصفح واختر: إضافة إلى الشاشة الرئيسية أو تثبيت التطبيق");
+    return;
+  }
+  installPrompt.prompt();
+  await installPrompt.userChoice.catch(() => null);
+  installPrompt = null;
+});
 
 // مزامنة المواعيد مع الكاش ليتعامل معها Service Worker للتنبيهات
 async function syncReminders() {

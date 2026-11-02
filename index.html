@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>المعلم للخياطة</title>
   <meta name="description" content="تطبيق المعلم للخياطة لإدارة العملاء والمقاسات والطلبات والمدفوعات والبضاعة" />
-  <meta name="theme-color" content="#24151a" />
+  <meta name="theme-color" content="#f1ede6" />
   <script>
     // 1. تصفية ومنع إزعاج أخطاء ورسائل إضافات المتصفح الخارجية (مثل إضافات الـ PDF)
     window.addEventListener('unhandledrejection', function(e) {
@@ -36,19 +36,22 @@
     if (location.protocol === "http:" || location.protocol === "https:") {
       const manifestLink = document.createElement("link");
       manifestLink.rel = "manifest";
-      manifestLink.href = "manifest.json?v=3.8";
+      manifestLink.href = "manifest.json?v=3.9";
       document.head.appendChild(manifestLink);
     }
   </script>
-  <link rel="apple-touch-icon" sizes="180x180" href="icon-180-v3.6.png?v=3.6" />
-  <link rel="icon" type="image/png" sizes="192x192" href="icon-192-v3.6.png?v=3.6" />
-  <link rel="stylesheet" href="style.css?v=3.8" />
+  <link rel="apple-touch-icon" sizes="180x180" href="icon-180-v3.9.png?v=3.9" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192-v3.9.png?v=3.9" />
+  <link rel="stylesheet" href="style.css?v=3.9" />
 </head>
 <body>
   <!-- الشريط العلوي -->
   <header class="topbar">
     <h1>✂️ المعلم للخياطة</h1>
-    <button id="notifyBtn" class="btn small ghost">🔔 تفعيل التنبيهات</button>
+    <div class="header-actions">
+      <button id="installAppBtn" class="btn small ghost" hidden>⬇️ تثبيت التطبيق بالأيقونة الجديدة</button>
+      <button id="notifyBtn" class="btn small ghost">🔔 تفعيل التنبيهات</button>
+    </div>
   </header>
 
   <main>
@@ -177,10 +180,10 @@
   <!-- مكتبات الفايربيز والمزامنة اللحظية الفورية بين جميع الأجهزة -->
   <script src="firebase-app.js?v=2.7"></script>
   <script src="firebase-firestore.js?v=2.7"></script>
-  <script src="firebase-sync.js?v=3.6"></script>
+  <script src="firebase-sync.js?v=3.9"></script>
   <!-- مكتبة توليد تقارير الوورد مباشرة في المتصفح لأي جهاز وموبايل -->
   <script src="docx.iife.js?v=2.7"></script>
   <script src="word-generator-client.js?v=2.7"></script>
-  <script src="app.js?v=3.8"></script>
+  <script src="app.js?v=3.9"></script>
 </body>
 </html>
